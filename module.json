@@ -1,0 +1,8 @@
+{
+	"name": "Content",
+	"slug": "content",
+	"version": "1.0",
+	"description": "It is a module for the content of the website to create and edit and delete.",
+    "repo_link": "https://github.com/amgadmetri/MarvelContent.git",
+	"enabled": true
+}
