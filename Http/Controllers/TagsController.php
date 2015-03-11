@@ -10,10 +10,11 @@ class TagsController extends Controller {
 	public function __construct(ContentRepository $content)
 	{
 		$this->content = $content;
+		$this->middleware('AclAuthenticate');
 	}
 
 
-	public function getView()
+	public function getIndex()
 	{
 		$tags = $this->content->getAllTags();
 		return view('content::contentTags.viewtags', array('tags'=>$tags));

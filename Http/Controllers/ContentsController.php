@@ -4,13 +4,14 @@ use App\Http\Controllers\Controller;
 use App\Modules\Content\Http\Requests\ContentFormRequest;
 use App\Modules\Content\Repositories\ContentRepository;
 
- class ContentsController extends Controller {
+class ContentsController extends Controller {
 
- 	private $content;
- 	public function __construct(ContentRepository $content)
- 	{
- 		$this->content = $content;
- 	}
+	private $content;
+	public function __construct(ContentRepository $content)
+	{
+		$this->content = $content;
+		$this->middleware('AclAuthenticate');
+	}
 
  	//display all the contents
 	public function getIndex()
@@ -31,7 +32,7 @@ use App\Modules\Content\Repositories\ContentRepository;
 	//insert the content in the database
 	public function postCreate(ContentFormRequest $request)
 	{
-		$data['user_id'] = 1;
+		$data['user_id'] = \Auth::user()->id;
 		$contentItem     = $this->content->createContent(array_merge($request->all(), $data));
 
 		$this->content->addSections($contentItem, $request->input('section_id'));
@@ -44,11 +45,12 @@ use App\Modules\Content\Repositories\ContentRepository;
 	public function getUpdate($id)
 	{
 		$contentItem = $this->content->getContent($id);
+		$contentData = $this->content->getContentData($contentItem);
 		$sections    = $this->content->getSectionsWithNoContent($contentItem->id);
 		$tags        = $this->content->getTagsWithNoContent($contentItem->id);
 
 		return view('content::contentItems.updatecontent', 
-			compact('contentItem', 'sections', 'tags'));
+			compact('contentItem', 'contentData', 'sections', 'tags'));
 	}
 
 	//update the content

@@ -1,26 +1,27 @@
-@extends('content::master')
+@extends('app')
 
 @section('content')
 <div class="container">
-	<div class="col-sm-9">
+
+  <div class="col-sm-9">
 
     @if (count($errors) > 0)
-      <div class="alert alert-danger">
-        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-        <ul>
-          @foreach ($errors->all() as $error)
-           <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
+    <div class="alert alert-danger">
+      <strong>Whoops!</strong> There were some problems with your input.<br><br>
+      <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
     @endif
 
     @if (Session::has('message'))
-      <div class="alert alert-success">
-        <ul>
-          <li>{{ Session::get('message') }}</li>
-        </ul>
-      </div>
+    <div class="alert alert-success">
+      <ul>
+        <li>{{ Session::get('message') }}</li>
+      </ul>
+    </div>
     @endif
 
     <form method="post">
@@ -84,27 +85,25 @@
 
       <div class="form-group">
         <label for="section_name">Content Section</label>
-        <br>
         Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
         <select multiple name="section_id[]" class="form-control" >
-         @foreach($sections as $section)
+          @foreach($sections as $section)
           <option value="{{ $section->id }}">{{ $section->section_name }}</option>
-         @endforeach
-       </select>  
-     </div>
+          @endforeach
+        </select>  
+      </div>
 
-     <div class="form-group">
-      <label for="tag_content">Tag Name:</label> 
-    </div>
-    <div class="form-group">
-     <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
-      @foreach($tags as $tag)
+      <div class="form-group">
+        <label for="tag_content">Tag Name:</label> 
+      </div>
+      <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
+        @foreach($tags as $tag)
         <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
-      @endforeach
-    </select>
-  </div>
-  <button type="submit" class="btn btn-primary form-control">Add Content</button>
-</form>
-</div>  
+        @endforeach
+      </select>
+
+      <button type="submit" class="btn btn-primary form-control">Add Content</button>
+    </form>
+  </div>  
 </div>
 @stop

@@ -10,9 +10,10 @@ class SectionsController extends Controller {
 	public function __construct(ContentRepository $content)
 	{
 		$this->content = $content;
+		$this->middleware('AclAuthenticate');
 	}
 
-	public function getView()
+	public function getIndex()
 	{
 		$sections = $this->content->getAllSections();
 		return view('content::contentSections.viewsections', compact('sections'));
@@ -47,7 +48,7 @@ class SectionsController extends Controller {
 
 	public function getDelete($id)
 	{
-		$this->contetn->deleteSection($id);
+		$this->content->deleteSection($id);
 		return redirect()->back()->with('message', 'Section Deleted succssefuly');
 	}
 }

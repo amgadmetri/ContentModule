@@ -15,11 +15,6 @@ class ContentItems extends Model {
         	'section_id')->withTimestamps();
     }
 
-    public function contentLanguagesVars()
-    {
-        return $this->hasMany('App\Modules\Content\ContentLanguagesVars', 'item_id');
-    }
-
     public function contentTags()
     {
         return $this->belongsToMany('App\Modules\Content\ContentTags', 
@@ -28,15 +23,30 @@ class ContentItems extends Model {
         	'tag_id')->withTimestamps();
     }
 
+    public function languageContents()
+    {
+        return $this->hasMany('App\Modules\Language\LanguageContent', 'item_id');
+    }
+    
     public static function boot()
     {
         parent::boot();
 
         ContentItems::deleting(function($contentItem)
         {
+            foreach ($contentItem->languageContents as  $languageContent) 
+            {
+                $languageContent->languageContentData()->delete();
+            }   
+            $contentItem->languageContents()->delete();
             $contentItem->contentSections()->detach();
             $contentItem->contentTags()->detach();
-            $contentItem->contentLanguagesVars()->delete();
+            \AclRepository::deleteItemPermissions('content', $contentItem->id);
+        });
+
+        ContentItems::created(function($contentItem)
+        {
+           \AclRepository::insertDefaultItemPermissions('content', $contentItem->id);
         });
     }
 }
