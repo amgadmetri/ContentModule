@@ -2,9 +2,7 @@
 
 @section('content')
 <div class="container">
-
-  <div class="col-sm-9">
-
+  <div class="col-sm-8">
     @if (count($errors) > 0)
     <div class="alert alert-danger">
       <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -105,5 +103,41 @@
       <button type="submit" class="btn btn-primary form-control">Add Content</button>
     </form>
   </div>  
+
+  <div class="col-sm-2">
+    <label for="album_name">Choos Galleries</label>
+    @include('gallery::parts.modals.mediamodal')
+  </div>
 </div>
+
+
+<link href="{{ asset('assets/css/jquery.tokenize.css') }}" rel="stylesheet">
+
+<script src="{{ asset('assets/js/content/jquery.tokenize.js') }}"></script>
+<script src="{{ asset('assets/js/content/addcontentgalleries.js') }}"></script>
+<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+
+<script>$('#tokenize').tokenize();</script>
+<script>
+tinymce.init({
+    selector: "textarea",
+    theme: "modern",
+    height: 300,
+    plugins: [
+         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+         "save table contextmenu directionality emoticons template paste textcolor"
+   ],
+   toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons", 
+   style_formats: [
+        {title: 'Bold text', inline: 'b'},
+        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+        {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+        {title: 'Example 1', inline: 'span', classes: 'example1'},
+        {title: 'Example 2', inline: 'span', classes: 'example2'},
+        {title: 'Table styles'},
+        {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+    ]
+ }); 
+</script>
 @stop

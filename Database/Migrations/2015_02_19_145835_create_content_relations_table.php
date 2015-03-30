@@ -16,8 +16,13 @@ class CreateContentRelationsTable extends Migration
 		{
 			Schema::create('content_relations', function(Blueprint $table) {
 				$table->bigIncrements('id');
-				$table->bigInteger('item_id');
-				$table->bigInteger('section_id');
+
+				$table->bigInteger('item_id')->unsigned();
+				$table->foreign('item_id')->references('id')->on('content_items');
+
+				$table->bigInteger('section_id')->unsigned();
+				$table->foreign('section_id')->references('id')->on('content_sections');
+
 				$table->timestamps();
 			});
 		}

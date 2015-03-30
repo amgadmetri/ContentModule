@@ -3,7 +3,9 @@
 use App\Http\Controllers\Controller;
 use App\Modules\Content\Http\Requests\ContentFormRequest;
 use App\Modules\Content\Repositories\ContentRepository;
+use GalleryRepository;
 
+use Illuminate\Http\Request;
 class ContentsController extends Controller {
 
 	private $content;
@@ -21,12 +23,21 @@ class ContentsController extends Controller {
 	}
 
 	//display the create form
-	public function getCreate()
+	public function getCreate(Request $request)
 	{
+		if($request->ajax()) 
+		{
+			$insertedGalleries = GalleryRepository::getGalleries($request->input('ids'));
+			return $insertedGalleries;
+		}
+
+		$galleries    = GalleryRepository::getAllGalleries();
+		$galleryBlock = view('gallery::parts.modals.modalgalleryblock', compact('galleries'))->render();
+
 		$sections = $this->content->getAllSections();
 		$tags     = $this->content->getAllTags();
 
-		return view('content::contentItems.addcontent' ,compact('sections', 'tags'));
+		return view('content::contentItems.addcontent' ,compact('sections', 'tags', 'galleryBlock'));
 	}
 
 	//insert the content in the database
@@ -42,15 +53,25 @@ class ContentsController extends Controller {
 	}
 
 	//display the update form 
-	public function getUpdate($id)
+	public function getUpdate($id, Request $request)
 	{
+
+		if($request->ajax()) 
+		{
+			$insertedGalleries = GalleryRepository::getGalleries($request->input('ids'));
+			return $insertedGalleries;
+		}
+
+		$galleries    = GalleryRepository::getAllGalleries();
+		$galleryBlock = view('gallery::parts.modals.modalgalleryblock', compact('galleries'))->render();
+
 		$contentItem = $this->content->getContent($id);
 		$contentData = $this->content->getContentData($contentItem);
 		$sections    = $this->content->getSectionsWithNoContent($contentItem->id);
 		$tags        = $this->content->getTagsWithNoContent($contentItem->id);
 
 		return view('content::contentItems.updatecontent', 
-			compact('contentItem', 'contentData', 'sections', 'tags'));
+			compact('contentItem', 'contentData', 'sections', 'tags', 'galleryBlock'));
 	}
 
 	//update the content

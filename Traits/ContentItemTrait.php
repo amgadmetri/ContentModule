@@ -8,7 +8,19 @@ trait ContentItemTrait{
 
 	public function getAllContents()
 	{
-		return ContentItems::all();
+		return ContentItems::with(['contentSections', 'contentTags', 'user'])->get();
+	}
+
+	public function getAllContentsWithData($language = false)
+	{
+		$language = $language ?: LanguageRepository::getDefaultLanguage()->key;
+		$contents =  ContentItems::with(['contentSections', 'contentTags', 'user'])->paginate(1);
+		
+		foreach ($contents as $content) 
+		{
+			$content->data = $this->getContentData($content, $language);
+		}
+		return $contents;
 	}
 
 	public function getContent($id)
@@ -16,15 +28,24 @@ trait ContentItemTrait{
 		return ContentItems::find($id);
 	}
 
+	public function getContentWithData($id, $language = false)
+	{
+		$content = ContentItems::find($id);
+		$content->data = $this->getContentData($content, $language);
+
+		return $content;
+	}
+
 	public function getContentData($obj, $language = false)
 	{
 		$language = $language ?: LanguageRepository::getDefaultLanguage()->key;
-		return LanguageRepository::getContent($obj, $language);
+		return LanguageRepository::getContent($obj->id, 'content', $language);
 	}
 
 	public function createContent($data)
 	{
 		$contentItem = ContentItems::create($data);
+		
 		LanguageRepository::createLanguageContent([
 			'title'       => ['title', 'description', 'content'],
 			'key'         => ['title', 'description', 'content'], 
@@ -43,7 +64,7 @@ trait ContentItemTrait{
 			'key'         => ['title', 'description', 'content'], 
 			'value'       => [$data['title'], $data['description'], $data['content']],
 			'language_id' => LanguageRepository::getDefaultLanguage()->id
-			]);
+			], 'content', $id);
 
 		$contentItem->update($data);
 

@@ -1,13 +1,35 @@
 <?php namespace App\Modules\Content\Traits;
 
 use App\Modules\Content\ContentTags;
+use \LanguageRepository;
 use DB;
 
 trait TagTrait{
 
+	public function searchTag($query)
+	{
+		return DB::table('tags_relations')->
+				whereIn(
+				'tag_id', 
+				ContentTags::where('tag_content', 'like', '%' . $query . '%')->lists('id')
+				)->lists('item_id');
+	}
+
+	public function getTagContentsWithData($id, $language = false)
+	{
+		$contentTags = ContentTags::find($id);
+		$contents    = $contentTags->contentItems()->paginate(1);
+
+		foreach ($contents as $content) 
+		{
+			$content->data = $this->getContentData($content, $language);
+		}
+		return $contents;
+	}
+
 	public function getAllTags()
 	{
-		return ContentTags::all();
+		return ContentTags::with('contentItems')->get();
 	}
 
 	public function getTag($id)

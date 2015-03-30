@@ -17,9 +17,9 @@ class CreateContentSectionsTable extends Migration
 			Schema::create('content_sections', function(Blueprint $table) {
 				$table->bigIncrements('id');
 				$table->bigInteger('parent_id');
-				$table->string('section_name', 255);
-				$table->timestamps();
+				$table->string('section_name', 255)->index();
 				$table->boolean('is_active')->default(0);
+				$table->timestamps();
 			});
 		}
 	}

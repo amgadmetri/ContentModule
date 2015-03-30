@@ -16,8 +16,13 @@ class CreateTagsRelationsTable extends Migration
 		{
 			Schema::create('tags_relations', function(Blueprint $table) {
 				$table->increments('id');
-				$table->bigInteger('tag_id');
-				$table->bigInteger('item_id');
+
+				$table->bigInteger('tag_id')->unsigned();
+				$table->foreign('tag_id')->references('id')->on('content_tags');
+
+				$table->bigInteger('item_id')->unsigned();
+				$table->foreign('item_id')->references('id')->on('content_items');
+
 				$table->timestamps();
 			});
 		}

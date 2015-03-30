@@ -23,9 +23,9 @@ class ContentItems extends Model {
         	'tag_id')->withTimestamps();
     }
 
-    public function languageContents()
+    public function user()
     {
-        return $this->hasMany('App\Modules\Language\LanguageContent', 'item_id');
+        return $this->belongsTo('App\Modules\Acl\AclUser');
     }
     
     public static function boot()
@@ -34,13 +34,10 @@ class ContentItems extends Model {
 
         ContentItems::deleting(function($contentItem)
         {
-            foreach ($contentItem->languageContents as  $languageContent) 
-            {
-                $languageContent->languageContentData()->delete();
-            }   
-            $contentItem->languageContents()->delete();
             $contentItem->contentSections()->detach();
             $contentItem->contentTags()->detach();
+
+            \LanguageRepository::deleteItemLanguageContents('content', $contentItem->id);
             \AclRepository::deleteItemPermissions('content', $contentItem->id);
         });
 

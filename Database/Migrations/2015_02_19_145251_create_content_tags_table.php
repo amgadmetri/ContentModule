@@ -16,7 +16,7 @@ class CreateContentTagsTable extends Migration
 		{
 			Schema::create('content_tags', function(Blueprint $table) {
 				$table->bigIncrements('id');
-				$table->string('tag_content', 255);
+				$table->string('tag_content', 255)->index();
 				$table->timestamps();
 			});
 		}

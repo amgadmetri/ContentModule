@@ -16,12 +16,15 @@ class CreateContentItemsTable extends Migration
 		{
 			Schema::create('content_items', function(Blueprint $table) {
 				$table->bigIncrements('id');;
-				$table->string('alias', 150);
+				$table->string('alias', 150)->index();
 				$table->string('post_image', 100);
+
+				$table->bigInteger('user_id')->unsigned();
+				$table->foreign('user_id')->references('id')->on('users');
+				
+				$table->enum('status', ['published', 'draft', 'suspend', 'deleted'])->default('draft')->index();
+				$table->bigInteger('post_views')->unsigned()->default('0');
 				$table->timestamps();
-				$table->bigInteger('user_id');
-				$table->enum('status', ['published', 'draft', 'suspend', 'deleted'])->default('draft');
-				$table->bigInteger('post_views')->default('0');
 
 			});
 		}

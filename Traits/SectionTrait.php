@@ -5,9 +5,52 @@ use DB;
 
 trait SectionTrait{
 
+	public function searchSection($query)
+	{
+		return DB::table('content_relations')->
+				whereIn(
+				'section_id', 
+				ContentSections::where('section_name', 'like', '%' . $query . '%')->lists('id')
+				)->lists('item_id');
+	}
+
+	public function getSectionContentsWithData($id, $language = false)
+	{
+		$contentSection = ContentSections::find($id);
+		$contents       = $contentSection->contentItems()->paginate(1);
+
+		foreach ($contents as $content) 
+		{
+			$content->data = $this->getContentData($content, $language);
+		}
+		return $contents;
+	}
+
+	public function getSectionTree($link = '', $ulClass = 'nav nav-pills', $liClass = '', $parent_id = 0)
+	{
+		$sections = $this->getAllSections();
+		$html     = '';
+		foreach ($sections as $section) 
+		{
+			if ($section->parent_id == $parent_id) 
+			{
+				$html .= 
+				"<li class='$liClass'>
+					<a href='$link/$section->id'>
+						$section->section_name  
+					</a>
+					<ul class='$ulClass'>
+						{$this->getSectionTree($link, $ulClass, $liClass, $section->id)}
+					</ul>
+				</li>";
+			}
+		}
+		return $html;
+	}
+
 	public function getAllSections()
 	{
-		return ContentSections::all();
+		return ContentSections::with('contentItems')->get();
 	}
 
 	public function getSection($id)
@@ -35,7 +78,7 @@ trait SectionTrait{
 	public function getSectionsWithNoContent($id)
 	{
 		$ids = DB::table('content_relations')->where('item_id', '=', $id)->lists('section_id');
-		return ContentSections::whereNotIn('id', $ids)->get();
+		return ContentSections::with('contentItems')->whereNotIn('id', $ids)->get();
 	}
 
 	public function addSections($obj, $data)
