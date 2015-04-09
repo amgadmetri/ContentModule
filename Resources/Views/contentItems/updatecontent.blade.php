@@ -115,7 +115,7 @@
 
   <div class="col-sm-2">
     <label for="album_name">Choos Galleries</label>
-    @include('gallery::parts.modals.mediamodal')
+    {!! $mediaLibrary !!}
   </div>
 </div>
 

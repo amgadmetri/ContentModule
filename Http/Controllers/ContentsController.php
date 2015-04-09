@@ -3,8 +3,8 @@
 use App\Http\Controllers\Controller;
 use App\Modules\Content\Http\Requests\ContentFormRequest;
 use App\Modules\Content\Repositories\ContentRepository;
-use GalleryRepository;
 
+use GalleryRepository;
 use Illuminate\Http\Request;
 class ContentsController extends Controller {
 
@@ -31,13 +31,11 @@ class ContentsController extends Controller {
 			return $insertedGalleries;
 		}
 
-		$galleries    = GalleryRepository::getAllGalleries();
-		$galleryBlock = view('gallery::parts.modals.modalgalleryblock', compact('galleries'))->render();
+		$sections     = $this->content->getAllSections();
+		$tags         = $this->content->getAllTags();
+		$mediaLibrary = GalleryRepository::getMediaLibrary();
 
-		$sections = $this->content->getAllSections();
-		$tags     = $this->content->getAllTags();
-
-		return view('content::contentItems.addcontent' ,compact('sections', 'tags', 'galleryBlock'));
+		return view('content::contentItems.addcontent' ,compact('sections', 'tags', 'mediaLibrary'));
 	}
 
 	//insert the content in the database
@@ -62,16 +60,14 @@ class ContentsController extends Controller {
 			return $insertedGalleries;
 		}
 
-		$galleries    = GalleryRepository::getAllGalleries();
-		$galleryBlock = view('gallery::parts.modals.modalgalleryblock', compact('galleries'))->render();
-
-		$contentItem = $this->content->getContent($id);
-		$contentData = $this->content->getContentData($contentItem);
-		$sections    = $this->content->getSectionsWithNoContent($contentItem->id);
-		$tags        = $this->content->getTagsWithNoContent($contentItem->id);
+		$contentItem  = $this->content->getContent($id);
+		$contentData  = $this->content->getContentData($contentItem);
+		$sections     = $this->content->getSectionsWithNoContent($contentItem->id);
+		$tags         = $this->content->getTagsWithNoContent($contentItem->id);
+		$mediaLibrary = GalleryRepository::getMediaLibrary();
 
 		return view('content::contentItems.updatecontent', 
-			compact('contentItem', 'contentData', 'sections', 'tags', 'galleryBlock'));
+			compact('contentItem', 'contentData', 'sections', 'tags', 'mediaLibrary'));
 	}
 
 	//update the content
