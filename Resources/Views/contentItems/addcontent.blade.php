@@ -81,16 +81,18 @@
         aria-describedby ="sizing-addon2">
         </textarea>
       </div>
-
-      <div class="form-group">
-        <label for="section_name">Content Section</label>
-        Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
-        <select multiple name="section_id[]" class="form-control" >
-          @foreach($sections as $section)
-          <option value="{{ $section->id }}">{{ $section->section_name }}</option>
-          @endforeach
-        </select>  
-      </div>
+      
+      @foreach($sectionTypes as $sectionType)
+        <div class="form-group">
+          <label for="section_name">Choose {{ $sectionType->section_type_name }}</label> <br>
+          Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
+          <select multiple name="section_id[]" class="form-control">
+            @foreach($sectionType->contentSections as $section)
+              <option value="{{ $section->id }}">{{ $section->section_name }}</option>
+            @endforeach
+          </select>  
+        </div>
+      @endforeach
 
       <div class="form-group">
         <label for="tag_content">Tag Name:</label> 

@@ -50,7 +50,7 @@ trait SectionTrait{
 
 	public function getAllSections()
 	{
-		return ContentSections::with('contentItems')->get();
+		return ContentSections::with(['contentItems', 'contentSectionType'])->get();
 	}
 
 	public function getSection($id)
@@ -73,12 +73,6 @@ trait SectionTrait{
 	{	
 		$section = $this->getSection($id);
 		return $section->delete();
-	}
-
-	public function getSectionsWithNoContent($id)
-	{
-		$ids = DB::table('content_relations')->where('item_id', '=', $id)->lists('section_id');
-		return ContentSections::with('contentItems')->whereNotIn('id', $ids)->get();
 	}
 
 	public function addSections($obj, $data)

@@ -25,6 +25,15 @@
 
     <form method="post">
       <input name="_token" type="hidden" value="{{ csrf_token() }}">
+      
+      <div class="form-group">
+        <label for="parent_id">Section Type:</label>
+        <select name="section_type_id" class="form-control">
+          @foreach($sectionTypes as $sectionType)
+          <option value="{{ $sectionType->id }}">{{ $sectionType->section_type_name }}</option>
+          @endforeach
+        </select>  
+      </div>
 
       <div class="form-group">
         <label for="parent_id">Parent Section:</label>

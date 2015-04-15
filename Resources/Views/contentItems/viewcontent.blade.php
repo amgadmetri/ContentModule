@@ -17,7 +17,7 @@
 				<th>
 					<a class="btn btn-default" href='{{ url("/content/update/$contentItem->id") }}' role="button">Edit</a> 
 					<a class="btn btn-default" href='{{ url("/content/delete/$contentItem->id") }}' role="button">Delete</a> 
-					<a class="btn btn-default" href='{{ url("/language/languagecontents/show/content/$contentItem->id") }}'role="button">Data</a> 
+					<a class="btn btn-default" href='{{ url("/language/languagecontents/show/content/$contentItem->id") }}'role="button">Translations</a> 
 					<a class="btn btn-default" href='{{ url("/Acl/permissions/show/content/$contentItem->id") }}'role="button">Permissions</a> 
 				</th>
 			</tr>

@@ -6,6 +6,7 @@
 		<table class="table table-striped">
 			<tr>
 				<th>Section id</th>
+				<th>Section Type</th>
 				<th>Section title</th>
 				<th>Section is active</th>
 				<th>Options</th>
@@ -13,6 +14,7 @@
 			@foreach($sections as $section)
 			<tr>
 				<th>{{ $section->id }}</th>
+				<th>{{ $section->contentSectionType->section_type_name }}</th>
 				<th>{{ $section->section_name }}</th>
 				<th>{{ $section->is_active }}</th>
 				<th>

@@ -1,6 +1,7 @@
 <?php namespace App\Modules\Content\Repositories;
 
 use App\Modules\Content\Traits\ContentItemTrait;
+use App\Modules\Content\Traits\SectionTypeTrait;
 use App\Modules\Content\Traits\SectionTrait;
 use App\Modules\Content\Traits\TagTrait;
 
@@ -12,6 +13,7 @@ use \AclRepository;
 class ContentRepository
 {
 	use ContentItemTrait;
+	use SectionTypeTrait;
 	use SectionTrait;
 	use TagTrait;
 

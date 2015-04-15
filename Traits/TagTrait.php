@@ -54,12 +54,6 @@ trait TagTrait{
 		return $tag->delete();
 	}
 
-	public function getTagsWithNoContent($id)
-	{
-		$ids = DB::table('tags_relations')->where('item_id', '=', $id)->lists('tag_id');
-		return ContentTags::whereNotIn('id', $ids)->get();
-	}
-
 	public function addTags($obj, $data)
 	{
 		$this->deleteTags($obj);

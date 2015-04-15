@@ -3,7 +3,7 @@
 use App\Http\Requests\Request;
 
 
-class TestFormRequest extends Request {
+class SectionTypeFormRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class TestFormRequest extends Request {
 	public function rules()
 	{
 		return [
-			'item_id' 		=> 'required',
-        	'tag_content' 	=> 'required|max:255'
-        	
+			'section_type_name' => 'required|max:255',
 		];
 	}
 

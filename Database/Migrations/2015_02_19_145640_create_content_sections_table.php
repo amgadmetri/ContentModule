@@ -19,6 +19,10 @@ class CreateContentSectionsTable extends Migration
 				$table->bigInteger('parent_id');
 				$table->string('section_name', 255)->index();
 				$table->boolean('is_active')->default(0);
+
+				$table->bigInteger('section_type_id')->unsigned();
+				$table->foreign('section_type_id')->references('id')->on('content_section_types');
+
 				$table->timestamps();
 			});
 		}

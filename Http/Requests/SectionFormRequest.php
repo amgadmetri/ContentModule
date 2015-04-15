@@ -24,9 +24,9 @@ class SectionFormRequest extends Request {
 	public function rules()
 	{
 		return [
-			'parent_id' 		=> 'required',
-        	'section_name' 	=> 'required|max:255',
-        	'is_active'			=> 'required'
+			'parent_id'    => 'required',
+			'section_name' => 'required|max:255',
+			'is_active'    => 'required'
         	
 		];
 	}

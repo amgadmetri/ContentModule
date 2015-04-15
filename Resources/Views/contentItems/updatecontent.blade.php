@@ -81,30 +81,32 @@
         placeholder="Content Description .." 
         aria-describedby="sizing-addon2">{{ $contentData['content'] }}</textarea>
       </div>
-      
-      <div class="form-group">
-        <label for="section_name">Content Section</label>
-        <select multiple name="section_id[]" class="form-control">
 
-          @foreach($sections as $section)
-          <option value="{{ $section->id }}" >{{ $section->section_name }}</option>
-          @endforeach
-          
-          @foreach($contentItem->contentSections as $contentSection)
-          <option value="{{ $contentSection->id }}" selected>{{ $contentSection->section_name }}</option>
-          @endforeach
-        </select>  
-      </div>
+       @foreach($sectionTypes as $sectionType)
+        <div class="form-group">
+          <label for="section_name">Choose {{ $sectionType->section_type_name }}</label> <br>
+          Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
+          <select multiple name="section_id[]" class="form-control">
+            @foreach($sectionType->contentSections as $section)
+              @if(in_array($section->id, $contentItem->contentSections->lists('id')))
+                <option value="{{ $section->id }}" selected>{{ $section->section_name }}</option>
+              @else
+                <option value="{{ $section->id }}">{{ $section->section_name }}</option>
+              @endif
+            @endforeach
+          </select>  
+        </div>
+      @endforeach
       
       Add new tags..
       <div class="form-group">
         <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
           @foreach($tags as $tag)
-          <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
-          @endforeach
-          
-          @foreach ($contentItem->contentTags as $contentTag)
-          <option value="{{ $contentTag->tag_content }}" selected>{{ $contentTag->tag_content }}</option>
+            @if(in_array($tag->id, $contentItem->contentTags->lists('id')))
+              <option value="{{ $tag->tag_content }}" selected>{{ $tag->tag_content }}</option>
+            @else
+              <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
+            @endif
           @endforeach
         </select>
       </div>
@@ -120,33 +122,9 @@
 </div>
 
 
-<link href="{{ asset('assets/css/jquery.tokenize.css') }}" rel="stylesheet">
-
-<script src="{{ asset('assets/js/content/jquery.tokenize.js') }}"></script>
-<script src="{{ asset('assets/js/content/addcontentgalleries.js') }}"></script>
-<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
-
+<link rel="stylesheet" type="text/css" href="{{ str_replace('public', 'app', url('Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.css')) }}">
+<script src="{{ str_replace('public', 'app', url('Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.js')) }}"></script>
 <script>$('#tokenize').tokenize();</script>
-<script>
-tinymce.init({
-    selector: "textarea",
-    height: 300,
-    theme: "modern",
-    plugins: [
-         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-         "save table contextmenu directionality emoticons template paste textcolor"
-   ],
-   toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons", 
-   style_formats: [
-        {title: 'Bold text', inline: 'b'},
-        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
-        {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
-        {title: 'Example 1', inline: 'span', classes: 'example1'},
-        {title: 'Example 2', inline: 'span', classes: 'example2'},
-        {title: 'Table styles'},
-        {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
-    ]
- }); 
-</script>
+@include('content::contentItems.assets.addcontentgalleries')
+@include('content::contentItems.assets.tinymce')
 @stop

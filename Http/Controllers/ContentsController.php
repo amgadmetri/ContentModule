@@ -31,11 +31,11 @@ class ContentsController extends Controller {
 			return $insertedGalleries;
 		}
 
-		$sections     = $this->content->getAllSections();
+		$sectionTypes = $this->content->getAllSectionTypes();
 		$tags         = $this->content->getAllTags();
 		$mediaLibrary = GalleryRepository::getMediaLibrary();
 
-		return view('content::contentItems.addcontent' ,compact('sections', 'tags', 'mediaLibrary'));
+		return view('content::contentItems.addcontent' ,compact('sectionTypes', 'tags', 'mediaLibrary'));
 	}
 
 	//insert the content in the database
@@ -62,18 +62,18 @@ class ContentsController extends Controller {
 
 		$contentItem  = $this->content->getContent($id);
 		$contentData  = $this->content->getContentData($contentItem);
-		$sections     = $this->content->getSectionsWithNoContent($contentItem->id);
-		$tags         = $this->content->getTagsWithNoContent($contentItem->id);
+		$sectionTypes = $this->content->getAllSectionTypes();
+		$tags         = $this->content->getAllTags();
 		$mediaLibrary = GalleryRepository::getMediaLibrary();
 
 		return view('content::contentItems.updatecontent', 
-			compact('contentItem', 'contentData', 'sections', 'tags', 'mediaLibrary'));
+			compact('contentItem', 'contentData', 'sectionTypes', 'tags', 'mediaLibrary'));
 	}
 
 	//update the content
 	public function postUpdate(ContentFormRequest $request, $id)
 	{
-		$data['user_id'] = 1;
+		$data['user_id'] = \Auth::user()->id;
 		$contentItem     = $this->content->updateContent($id, array_merge($request->all(), $data));
 
 		$this->content->addSections($contentItem, $request->input('section_id'));

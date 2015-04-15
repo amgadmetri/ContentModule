@@ -21,8 +21,9 @@ class SectionsController extends Controller {
 
 	public function getCreate()
 	{
-		$sections = $this->content->getAllSections();
-		return view('content::contentSections.addsection', compact('sections'));
+		$sections     = $this->content->getAllSections();
+		$sectionTypes = $this->content->getAllSectionTypes();
+		return view('content::contentSections.addsection', compact('sections', 'sectionTypes'));
 	}
 
 	public function postCreate(SectionFormRequest $request)
@@ -33,10 +34,11 @@ class SectionsController extends Controller {
 
 	public function getUpdate($id)
 	{
-		$section  = $this->content->getSection($id);
-		$sections = $this->content->getAllSections();
+		$section      = $this->content->getSection($id);
+		$sections     = $this->content->getAllSections();
+		$sectionTypes = $this->content->getAllSectionTypes();
 
-		return view('content::contentSections.updatesection', compact('section', 'sections'));
+		return view('content::contentSections.updatesection', compact('section', 'sections', 'sectionTypes'));
 	}
 
 	//update the content
