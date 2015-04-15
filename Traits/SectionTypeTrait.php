@@ -31,4 +31,9 @@ trait SectionTypeTrait{
 		$sectionType = $this->getSectionType($id);
 		return $sectionType->delete();
 	}
+
+	public function getAllCategpries()
+	{
+		return ContentSectionTypes::where('section_type_name', '=', 'Category')->with('contentSections')->first();
+	}
 }

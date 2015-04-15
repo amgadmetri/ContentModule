@@ -28,9 +28,9 @@ trait SectionTrait{
 
 	public function getSectionTree($link = '', $ulClass = 'nav nav-pills', $liClass = '', $parent_id = 0)
 	{
-		$sections = $this->getAllSections();
-		$html     = '';
-		foreach ($sections as $section) 
+		$sectionType = $this->getAllCategpries();
+		$html        = '';
+		foreach ($sectionType->contentSections as $section) 
 		{
 			if ($section->parent_id == $parent_id) 
 			{
