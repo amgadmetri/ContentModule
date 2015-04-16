@@ -25,12 +25,12 @@ trait ContentItemTrait{
 
 	public function getContent($id)
 	{
-		return ContentItems::find($id);
+		return ContentItems::with(['contentSections', 'contentTags', 'user'])->find($id);
 	}
 
 	public function getContentWithData($id, $language = false)
 	{
-		$content = ContentItems::find($id);
+		$content       = $this->getContent($id);
 		$content->data = $this->getContentData($content, $language);
 
 		return $content;

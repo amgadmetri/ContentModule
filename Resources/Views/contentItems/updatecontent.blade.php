@@ -23,6 +23,13 @@
     </div>
     @endif
     
+    <div class="form-group">
+      <label for="content_image">Content Image</label>
+      <img class="img-responsive" src="{{ $contentItem->content_image }}" width="200" height="200" id="content_image">
+      <br>
+      {!! $contentImageMediaLibrary !!}
+    </div>
+
     <form method="post">
       <input name="_token" type="hidden" value="{{ csrf_token() }}">
       
@@ -82,31 +89,31 @@
         aria-describedby="sizing-addon2">{{ $contentData['content'] }}</textarea>
       </div>
 
-       @foreach($sectionTypes as $sectionType)
-        <div class="form-group">
-          <label for="section_name">Choose {{ $sectionType->section_type_name }}</label> <br>
-          Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
-          <select multiple name="section_id[]" class="form-control">
-            @foreach($sectionType->contentSections as $section)
-              @if(in_array($section->id, $contentItem->contentSections->lists('id')))
-                <option value="{{ $section->id }}" selected>{{ $section->section_name }}</option>
-              @else
-                <option value="{{ $section->id }}">{{ $section->section_name }}</option>
-              @endif
-            @endforeach
-          </select>  
-        </div>
+      @foreach($sectionTypes as $sectionType)
+      <div class="form-group">
+        <label for="section_name">Choose {{ $sectionType->section_type_name }}</label> <br>
+        Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
+        <select multiple name="section_id[]" class="form-control">
+          @foreach($sectionType->contentSections as $section)
+          @if(in_array($section->id, $contentItem->contentSections->lists('id')))
+          <option value="{{ $section->id }}" selected>{{ $section->section_name }}</option>
+          @else
+          <option value="{{ $section->id }}">{{ $section->section_name }}</option>
+          @endif
+          @endforeach
+        </select>  
+      </div>
       @endforeach
       
       Add new tags..
       <div class="form-group">
         <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
           @foreach($tags as $tag)
-            @if(in_array($tag->id, $contentItem->contentTags->lists('id')))
-              <option value="{{ $tag->tag_content }}" selected>{{ $tag->tag_content }}</option>
-            @else
-              <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
-            @endif
+          @if(in_array($tag->id, $contentItem->contentTags->lists('id')))
+          <option value="{{ $tag->tag_content }}" selected>{{ $tag->tag_content }}</option>
+          @else
+          <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
+          @endif
           @endforeach
         </select>
       </div>

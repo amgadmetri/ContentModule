@@ -1,6 +1,23 @@
 <script type="text/javascript">
 	$(document).ready(function () {
-		mediaSelectedIds.init(function(checkedValues)
+		contentImageMediaLibrary.init(function(checkedValues)
+		{
+			$.ajax({
+				url         : window.location,
+				type        : 'GET',
+				data        : {'ids': checkedValues},
+				success     : function(data)
+				{
+					if(data[0].type === 'photo')
+						img = '<img alt="' + data[0].caption + '" src="' + data[0].path + '"/>';
+
+					$('#content_image').attr('src', data[0].path);
+					$('input[name=content_image]').attr('value', data[0].id);
+				}
+			});
+		});
+
+		mediaLibrary.init(function(checkedValues)
 		{
 			$.ajax({
 				url         : window.location,

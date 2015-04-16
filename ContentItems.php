@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 class ContentItems extends Model {
 
     protected $table    = 'content_items';
-    protected $fillable = ['user_id', 'status', 'alias', 'post_image', 'post_views'];
+    protected $fillable = ['user_id', 'status', 'alias', 'content_image', 'content_views'];
 
     public function contentSections()
     {

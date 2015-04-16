@@ -31,11 +31,12 @@ class ContentsController extends Controller {
 			return $insertedGalleries;
 		}
 
-		$sectionTypes = $this->content->getAllSectionTypes();
-		$tags         = $this->content->getAllTags();
-		$mediaLibrary = GalleryRepository::getMediaLibrary();
+		$sectionTypes             = $this->content->getAllSectionTypes();
+		$tags                     = $this->content->getAllTags();
+		$contentImageMediaLibrary = GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
+		$mediaLibrary             = GalleryRepository::getMediaLibrary();
 
-		return view('content::contentItems.addcontent' ,compact('sectionTypes', 'tags', 'mediaLibrary'));
+		return view('content::contentItems.addcontent' ,compact('sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
 	}
 
 	//insert the content in the database
@@ -64,10 +65,11 @@ class ContentsController extends Controller {
 		$contentData  = $this->content->getContentData($contentItem);
 		$sectionTypes = $this->content->getAllSectionTypes();
 		$tags         = $this->content->getAllTags();
-		$mediaLibrary = GalleryRepository::getMediaLibrary();
+		$contentImageMediaLibrary = GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
+		$mediaLibrary             = GalleryRepository::getMediaLibrary();
 
 		return view('content::contentItems.updatecontent', 
-			compact('contentItem', 'contentData', 'sectionTypes', 'tags', 'mediaLibrary'));
+			compact('contentItem', 'contentData', 'sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
 	}
 
 	//update the content

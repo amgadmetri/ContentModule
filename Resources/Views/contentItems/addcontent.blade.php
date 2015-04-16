@@ -21,9 +21,17 @@
       </ul>
     </div>
     @endif
+    
+    <div class="form-group">
+      <label for="content_image">Content Image</label>
+      <img class="img-responsive" src="http://placehold.it/200x200" width="200" height="200" id="content_image">
+      <br>
+      {!! $contentImageMediaLibrary !!}
+    </div>
 
-    <form method="post">
+    <form method="post">  
       <input name="_token" type="hidden" value="{{ csrf_token() }}">
+      <input type  ="hidden" name  ="content_image" value ="{{ old('content_image') }}" >
 
       <div class="form-group">
         <label for="alias">Content Alias</label>
@@ -79,38 +87,38 @@
         value            ="{{ old('content') }}" 
         placeholder      ="Add content here .."
         aria-describedby ="sizing-addon2">
-        </textarea>
-      </div>
-      
-      @foreach($sectionTypes as $sectionType)
-        <div class="form-group">
-          <label for="section_name">Choose {{ $sectionType->section_type_name }}</label> <br>
-          Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
-          <select multiple name="section_id[]" class="form-control">
-            @foreach($sectionType->contentSections as $section)
-              <option value="{{ $section->id }}">{{ $section->section_name }}</option>
-            @endforeach
-          </select>  
-        </div>
-      @endforeach
+      </textarea>
+    </div>
 
-      <div class="form-group">
-        <label for="tag_content">Tag Name:</label> 
-      </div>
-      <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
-        @foreach($tags as $tag)
-        <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
+    @foreach($sectionTypes as $sectionType)
+    <div class="form-group">
+      <label for="section_name">Choose {{ $sectionType->section_type_name }}</label> <br>
+      Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
+      <select multiple name="section_id[]" class="form-control">
+        @foreach($sectionType->contentSections as $section)
+        <option value="{{ $section->id }}">{{ $section->section_name }}</option>
         @endforeach
-      </select>
+      </select>  
+    </div>
+    @endforeach
 
-      <button type="submit" class="btn btn-primary form-control">Add Content</button>
-    </form>
-  </div>  
+    <div class="form-group">
+      <label for="tag_content">Tag Name:</label> 
+    </div>
+    <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
+      @foreach($tags as $tag)
+      <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
+      @endforeach
+    </select>
 
-  <div class="col-sm-2">
-    <label for="album_name">Choos Galleries</label>
-    {!! $mediaLibrary !!}
-  </div>
+    <button type="submit" class="btn btn-primary form-control">Add Content</button>
+  </form>
+</div>  
+
+<div class="col-sm-2">
+  <label for="album_name">Choos Galleries</label>
+  {!! $mediaLibrary !!}
+</div>
 </div>
 
 
