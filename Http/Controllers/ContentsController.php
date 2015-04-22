@@ -16,10 +16,13 @@ class ContentsController extends Controller {
 	}
 
  	//display all the contents
-	public function getIndex()
+	public function getIndex(Request $request)
 	{
-		$contentItems = $this->content->getAllContents();
-		return view('content::contentItems.viewcontent', compact('contentItems'));
+		$status       = $request->input('status') ?: 'all';
+		$contentItems = $this->content->getAllContents($status);
+
+		$contentItems->setPath(url('content?status=' . $request->input('status')));
+		return view('content::contentItems.viewcontent', compact('contentItems', 'status'));
 	}
 
 	//display the create form
@@ -27,12 +30,12 @@ class ContentsController extends Controller {
 	{
 		if($request->ajax()) 
 		{
-			$insertedGalleries = GalleryRepository::getGalleries($request->input('ids'));
-			return $insertedGalleries;
+			return GalleryRepository::getGalleries($request->input('ids'));
 		}
 
 		$sectionTypes             = $this->content->getAllSectionTypes();
 		$tags                     = $this->content->getAllTags();
+		
 		$contentImageMediaLibrary = GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
 		$mediaLibrary             = GalleryRepository::getMediaLibrary();
 
@@ -52,24 +55,25 @@ class ContentsController extends Controller {
 	}
 
 	//display the update form 
-	public function getUpdate($id, Request $request)
+	public function getUpdate(Request $request, $id)
 	{
-
 		if($request->ajax()) 
 		{
 			$insertedGalleries = GalleryRepository::getGalleries($request->input('ids'));
 			return $insertedGalleries;
 		}
 
-		$contentItem  = $this->content->getContent($id);
-		$contentData  = $this->content->getContentData($contentItem);
-		$sectionTypes = $this->content->getAllSectionTypes();
-		$tags         = $this->content->getAllTags();
-		$contentImageMediaLibrary = GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
-		$mediaLibrary             = GalleryRepository::getMediaLibrary();
+		$contentItem               = $this->content->getContentWithData($id);
+		$contentItem->contentImage = GalleryRepository::getGallery($contentItem->content_image);
 
-		return view('content::contentItems.updatecontent', 
-			compact('contentItem', 'contentData', 'sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
+		$sectionTypes              = $this->content->getAllSectionTypes();
+		$tags                      = $this->content->getAllTags();
+
+		$contentImageMediaLibrary  = GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
+		$mediaLibrary              = GalleryRepository::getMediaLibrary();
+
+		return view('content::contentItems.updatecontent',
+			compact('contentItem', 'sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
 	}
 
 	//update the content
@@ -89,5 +93,27 @@ class ContentsController extends Controller {
 	{
 		$this->content->deleteContent($id);
 		return redirect()->back()->with('message', 'Content Deleted succssefuly');
+	}
+
+	//Display the content albums
+	public function getAlbums(Request $request, $id)
+	{
+		if($request->ajax()) 
+		{	
+			return $this->content->addContentAlbums($this->content->getContent($id), $request->input('ids'));
+		}
+		
+		$contentItem              = $this->content->getContentWithData($id);
+		$contentAlbums            = GalleryRepository::getAlbums(unserialize($contentItem->content_albums));
+		$contentAlbumMediaLibrary = GalleryRepository::getMediaLibrary('album', false, 'contentAlbumMediaLibrary');
+
+		return view('content::contentItems.contentalbums' ,compact('contentItem', 'contentAlbums', 'contentAlbumMediaLibrary'));
+	}
+
+	//Delete the content album
+	public function getDeletealbum($id, $albumId)
+	{
+		$this->content->deleteContentAlbums($this->content->getContent($id), $albumId);
+		return redirect()->back()->with('message', 'Album deleted succssefuly');
 	}
 }

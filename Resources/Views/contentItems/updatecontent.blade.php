@@ -22,10 +22,12 @@
       </ul>
     </div>
     @endif
-    
+
     <div class="form-group">
       <label for="content_image">Content Image</label>
-      <img class="img-responsive" src="{{ $contentItem->content_image }}" width="200" height="200" id="content_image">
+      <a href="{{ url('gallery/preview', $contentItem->contentImage->id) }}" target="_blank">
+        <img class="img-responsive" src="{{ $contentItem->contentImage->path }}" width="200" height="200" id="content_image">
+      </a>
       <br>
       {!! $contentImageMediaLibrary !!}
     </div>
@@ -51,7 +53,6 @@
           <option @if($contentItem->status === 'published') selected @endif value="published">Published</option>
           <option @if($contentItem->status === 'draft') selected @endif value="draft">Draft</option>
           <option @if($contentItem->status === 'suspend') selected @endif value="suspend">Suspend</option>
-          <option @if($contentItem->status === 'delete') selected @endif value="delete">Delete</option>
         </select>  
       </div>
       
@@ -61,7 +62,7 @@
         type="text" 
         class="form-control" 
         name="title" 
-        value="{{ $contentData['title'] }}" 
+        value="{{ $contentItem->data['title'] }}" 
         placeholder="Add title here .." 
         aria-describedby="sizing-addon2"
         >
@@ -73,7 +74,7 @@
         type="text" 
         class="form-control" 
         name="description" 
-        value="{{ $contentData['description'] }}" 
+        value="{{ $contentItem->data['description'] }}" 
         placeholder="Content Description .." 
         aria-describedby="sizing-addon2"
         >
@@ -86,7 +87,7 @@
         rows="3" name="content" 
         value="" 
         placeholder="Content Description .." 
-        aria-describedby="sizing-addon2">{{ $contentData['content'] }}</textarea>
+        aria-describedby="sizing-addon2">{{ $contentItem->data['content'] }}</textarea>
       </div>
 
       @foreach($sectionTypes as $sectionType)

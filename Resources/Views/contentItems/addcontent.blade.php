@@ -1,6 +1,6 @@
-@extends('app')
-
-@section('content')
+  @extends('app')
+  
+  @section('content')
 <div class="container">
   <div class="col-sm-8">
     @if (count($errors) > 0)
@@ -22,16 +22,20 @@
     </div>
     @endif
     
-    <div class="form-group">
-      <label for="content_image">Content Image</label>
-      <img class="img-responsive" src="http://placehold.it/200x200" width="200" height="200" id="content_image">
-      <br>
-      {!! $contentImageMediaLibrary !!}
+    <div class="col-sm-12">
+      <div class="col-sm-6">
+       <div class="form-group">
+        <label for="content_image">Content Image</label>
+        <img class="img-responsive" src="http://placehold.it/200x200" width="200" height="200" id="content_image">
+        <br>
+        {!! $contentImageMediaLibrary !!}
+        </div>
+      </div>
     </div>
 
-    <form method="post">  
+    <form method="post" id="content_form">  
       <input name="_token" type="hidden" value="{{ csrf_token() }}">
-      <input type  ="hidden" name  ="content_image" value ="{{ old('content_image') }}" >
+      <input type  ="hidden" name  ="content_image">
 
       <div class="form-group">
         <label for="alias">Content Alias</label>
@@ -51,7 +55,6 @@
           <option @if(old('status') === "published") selected @endif value="published">Published</option>
           <option @if(old('status') === "draft") selected @endif value="draft">Draft</option>
           <option @if(old('status') === "suspend") selected @endif value="suspend">Suspend</option>
-          <option @if(old('status') === "delete") selected @endif value="delete">Delete</option>
         </select>  
       </div>
 
@@ -87,38 +90,40 @@
         value            ="{{ old('content') }}" 
         placeholder      ="Add content here .."
         aria-describedby ="sizing-addon2">
-      </textarea>
-    </div>
+        </textarea>
+      </div>
 
-    @foreach($sectionTypes as $sectionType)
-    <div class="form-group">
-      <label for="section_name">Choose {{ $sectionType->section_type_name }}</label> <br>
-      Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
-      <select multiple name="section_id[]" class="form-control">
-        @foreach($sectionType->contentSections as $section)
-        <option value="{{ $section->id }}">{{ $section->section_name }}</option>
-        @endforeach
-      </select>  
-    </div>
-    @endforeach
-
-    <div class="form-group">
-      <label for="tag_content">Tag Name:</label> 
-    </div>
-    <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
-      @foreach($tags as $tag)
-      <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
+      @foreach($sectionTypes as $sectionType)
+      <div class="form-group">
+        <label for="section_name">Choose {{ $sectionType->section_type_name }}</label> <br>
+        Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
+        <select multiple name="section_id[]" class="form-control">
+          @foreach($sectionType->contentSections as $section)
+          <option value="{{ $section->id }}">{{ $section->section_name }}</option>
+          @endforeach
+        </select>  
+      </div>
       @endforeach
-    </select>
 
-    <button type="submit" class="btn btn-primary form-control">Add Content</button>
-  </form>
-</div>  
+      <div class="form-group">
+        <label for="tag_content">Tag Name:</label> 
+      </div>
+      <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
+        @foreach($tags as $tag)
+        <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
+        @endforeach
+      </select>
 
-<div class="col-sm-2">
-  <label for="album_name">Choos Galleries</label>
-  {!! $mediaLibrary !!}
-</div>
+      <button type="submit" class="btn btn-primary form-control">Add Content</button>
+    </form>
+  </div>  
+  
+  <div class="col-sm-2">
+    <div class="form-group">
+      <label for="album_name">Choos Galleries</label>
+      {!! $mediaLibrary !!}
+    </div>
+  </div>
 </div>
 
 

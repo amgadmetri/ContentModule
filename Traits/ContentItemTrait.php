@@ -6,15 +6,22 @@ use LanguageRepository;
 
 trait ContentItemTrait{
 
-	public function getAllContents()
+	public function getAllContents($status = 'published')
 	{
-		return ContentItems::with(['contentSections', 'contentTags', 'user'])->get();
+		if ($status == 'all') 
+		{
+			return ContentItems::with(['contentSections', 'contentTags', 'user'])->paginate('3');
+		}
+
+		return ContentItems::where('status', '=', $status)->
+		                     with(['contentSections', 'contentTags', 'user'])->
+		                     paginate('3');
 	}
 
 	public function getAllContentsWithData($language = false)
 	{
 		$language = $language ?: LanguageRepository::getDefaultLanguage()->key;
-		$contents =  ContentItems::with(['contentSections', 'contentTags', 'user'])->paginate(1);
+		$contents =  $this->getAllContents();
 		
 		foreach ($contents as $content) 
 		{
@@ -58,15 +65,15 @@ trait ContentItemTrait{
 
 	public function updateContent($id, $data)
 	{
-		$contentItem = $this->getContent($id);
-		$data        = LanguageRepository::createLanguageContent([
+		$contentItem  = $this->getContent($id);
+		$languageData = LanguageRepository::createLanguageContent([
 			'title'       => ['title', 'description', 'content'],
 			'key'         => ['title', 'description', 'content'], 
 			'value'       => [$data['title'], $data['description'], $data['content']],
 			'language_id' => LanguageRepository::getDefaultLanguage()->id
 			], 'content', $id);
-
-		$contentItem->update($data);
+		
+		$contentItem->update(array_merge($languageData, ['alias' => $data['alias'], 'status' => $data['status'], 'user_id' => $data['user_id']]));
 
 		return $contentItem;
 	}
@@ -75,5 +82,30 @@ trait ContentItemTrait{
 	{	
 		$contentItem = $this->getContent($id);
 		return $contentItem->delete();
+	}
+
+	public function addContentAlbums($obj, $ids)
+	{
+		$albums              = unserialize($obj->content_albums) ?: array();
+		$albums              = array_unique(array_merge($albums, $ids));
+		
+		$obj->content_albums = serialize($albums);
+		$obj->save();
+
+		return $obj;
+	}
+
+	public function deleteContentAlbums($obj, $id)
+	{
+		$albums = unserialize($obj->content_albums);
+		$key    = array_search($id, $albums);
+
+		if ($key !== false)
+		{
+			unset($albums[$key]);
+		} 
+
+		$obj->content_albums = serialize($albums);
+		return $obj->save();
 	}
 }
