@@ -127,8 +127,8 @@
 </div>
 
 
-<link rel="stylesheet" type="text/css" href="{{ str_replace('public', 'app', url('Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.css')) }}">
-<script src="{{ str_replace('public', 'app', url('Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.js')) }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url('cms/app/Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.css') }}">
+<script src="{{ url('cms/app/Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.js') }}"></script>
 <script>$('#tokenize').tokenize();</script>
 @include('content::contentItems.assets.addcontentgalleries')
 @include('content::contentItems.assets.tinymce')

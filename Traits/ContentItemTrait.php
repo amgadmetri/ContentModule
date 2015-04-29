@@ -73,7 +73,7 @@ trait ContentItemTrait{
 			'language_id' => LanguageRepository::getDefaultLanguage()->id
 			], 'content', $id);
 		
-		$contentItem->update(array_merge($languageData, ['alias' => $data['alias'], 'status' => $data['status'], 'user_id' => $data['user_id']]));
+		$contentItem->update(array_merge($languageData, $data));
 
 		return $contentItem;
 	}

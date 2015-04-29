@@ -25,15 +25,20 @@
 
     <div class="form-group">
       <label for="content_image">Content Image</label>
-      <a href="{{ url('gallery/preview', $contentItem->contentImage->id) }}" target="_blank">
-        <img class="img-responsive" src="{{ $contentItem->contentImage->path }}" width="200" height="200" id="content_image">
-      </a>
+      @if($content->contentImage)
+        <a href="{{ url('gallery/preview', $contentItem->contentImage->id) }}" target="_blank">
+          <img class="img-responsive" src="{{ $contentItem->contentImage->path }}" width="200" height="200" id="content_image">
+        </a>
+      @else
+        <img class="img-responsive" src="http://placehold.it/900x300" width="200" height="200" id="content_image">
+      @endif
       <br>
       {!! $contentImageMediaLibrary !!}
     </div>
 
     <form method="post">
       <input name="_token" type="hidden" value="{{ csrf_token() }}">
+      <input type  ="hidden" name  ="content_image">
       
       <div class="form-group">
         <label for="alias">Content Alias</label>
@@ -130,8 +135,8 @@
 </div>
 
 
-<link rel="stylesheet" type="text/css" href="{{ str_replace('public', 'app', url('Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.css')) }}">
-<script src="{{ str_replace('public', 'app', url('Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.js')) }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url('cms/app/Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.css') }}">
+<script src="{{ url('cms/app/Modules/Content/Resources/Views/contentItems/assets/jquery.tokenize.js') }}"></script>
 <script>$('#tokenize').tokenize();</script>
 @include('content::contentItems.assets.addcontentgalleries')
 @include('content::contentItems.assets.tinymce')
