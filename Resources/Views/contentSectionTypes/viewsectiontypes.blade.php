@@ -14,8 +14,22 @@
 				<th>{{ $sectionType->id }}</th>
 				<th>{{ $sectionType->section_type_name }}</th>
 				<th>
-					<a class="btn btn-default" href='{{ url("/content/sectiontypes/update/$sectionType->id") }}' role="button">Edit</a> 
-					<a class="btn btn-default" href='{{ url("/content/sectiontypes/delete/$sectionType->id") }}' role="button">Delete</a> 
+					@if(\AclRepository::can('edit', 'SectionTypes'))
+						<a 
+						class ="btn btn-default" 
+						href  ='{{ url("/content/sectiontypes/update/$sectionType->id") }}' 
+						role  ="button">
+						Edit
+						</a> 
+					@endif
+					@if(\AclRepository::can('delete', 'SectionTypes'))
+						<a 
+						class ="btn btn-default" 
+						href  ='{{ url("/content/sectiontypes/delete/$sectionType->id") }}' 
+						role  ="button">
+						Delete
+						</a> 
+					@endif
 				</th>
 			</tr>
 			@endforeach

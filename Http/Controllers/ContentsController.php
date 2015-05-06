@@ -1,25 +1,23 @@
 <?php namespace App\Modules\Content\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Modules\Content\Http\Requests\ContentFormRequest;
 use App\Modules\Content\Repositories\ContentRepository;
 
-use GalleryRepository;
 use Illuminate\Http\Request;
-class ContentsController extends Controller {
+class ContentsController extends BaseController {
 
-	private $content;
 	public function __construct(ContentRepository $content)
 	{
-		$this->content = $content;
-		$this->middleware('AclAuthenticate');
+		parent::__construct($content, 'Contents');
 	}
 
  	//display all the contents
 	public function getIndex(Request $request)
 	{
+		$this->hasPermission('show');
 		$status       = $request->input('status') ?: 'all';
-		$contentItems = $this->content->getAllContents($status);
+		$contentItems = $this->repository->getAllContents($status);
 
 		$contentItems->setPath(url('content?status=' . $request->input('status')));
 		return view('content::contentItems.viewcontent', compact('contentItems', 'status'));
@@ -28,16 +26,17 @@ class ContentsController extends Controller {
 	//display the create form
 	public function getCreate(Request $request)
 	{
+		$this->hasPermission('add');
 		if($request->ajax()) 
 		{
-			return GalleryRepository::getGalleries($request->input('ids'));
+			return \GalleryRepository::getGalleries($request->input('ids'));
 		}
 
-		$sectionTypes             = $this->content->getAllSectionTypes();
-		$tags                     = $this->content->getAllTags();
+		$sectionTypes             = $this->repository->getAllSectionTypes();
+		$tags                     = $this->repository->getAllTags();
 		
-		$contentImageMediaLibrary = GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
-		$mediaLibrary             = GalleryRepository::getMediaLibrary();
+		$contentImageMediaLibrary = \GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
+		$mediaLibrary             = \GalleryRepository::getMediaLibrary();
 
 		return view('content::contentItems.addcontent' ,compact('sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
 	}
@@ -45,11 +44,12 @@ class ContentsController extends Controller {
 	//insert the content in the database
 	public function postCreate(ContentFormRequest $request)
 	{
+		$this->hasPermission('add');
 		$data['user_id'] = \Auth::user()->id;
-		$contentItem     = $this->content->createContent(array_merge($request->all(), $data));
+		$contentItem     = $this->repository->createContent(array_merge($request->all(), $data));
 
-		$this->content->addSections($contentItem, $request->input('section_id'));
-		$this->content->addtags($contentItem, $request->get('tag_content'));
+		$this->repository->addSections($contentItem, $request->input('section_id'));
+		$this->repository->addtags($contentItem, $request->get('tag_content'));
 
 		return redirect()->back()->with('message', 'Content inserted in the database succssefuly');
 	}
@@ -57,20 +57,21 @@ class ContentsController extends Controller {
 	//display the update form 
 	public function getUpdate(Request $request, $id)
 	{
+		$this->hasPermission('edit');
 		if($request->ajax()) 
 		{
-			$insertedGalleries = GalleryRepository::getGalleries($request->input('ids'));
+			$insertedGalleries = \GalleryRepository::getGalleries($request->input('ids'));
 			return $insertedGalleries;
 		}
 
-		$contentItem               = $this->content->getContentWithData($id);
-		$contentItem->contentImage = GalleryRepository::getGallery($contentItem->content_image);
+		$contentItem               = $this->repository->getContentWithData($id);
+		$contentItem->contentImage = \GalleryRepository::getGallery($contentItem->content_image);
 
-		$sectionTypes              = $this->content->getAllSectionTypes();
-		$tags                      = $this->content->getAllTags();
+		$sectionTypes              = $this->repository->getAllSectionTypes();
+		$tags                      = $this->repository->getAllTags();
 
-		$contentImageMediaLibrary  = GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
-		$mediaLibrary              = GalleryRepository::getMediaLibrary();
+		$contentImageMediaLibrary  = \GalleryRepository::getMediaLibrary('photo', true, 'contentImageMediaLibrary');
+		$mediaLibrary              = \GalleryRepository::getMediaLibrary();
 
 		return view('content::contentItems.updatecontent',
 			compact('contentItem', 'sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
@@ -79,11 +80,12 @@ class ContentsController extends Controller {
 	//update the content
 	public function postUpdate(ContentFormRequest $request, $id)
 	{
+		$this->hasPermission('edit');
 		$data['user_id'] = \Auth::user()->id;
-		$contentItem     = $this->content->updateContent($id, array_merge($request->all(), $data));
+		$contentItem     = $this->repository->updateContent($id, array_merge($request->all(), $data));
 
-		$this->content->addSections($contentItem, $request->input('section_id'));
-		$this->content->addtags($contentItem, $request->get('tag_content'));
+		$this->repository->addSections($contentItem, $request->input('section_id'));
+		$this->repository->addtags($contentItem, $request->get('tag_content'));
 		
 		return redirect()->back()->with('message', 'Content updated succssefuly');
 	}
@@ -91,29 +93,8 @@ class ContentsController extends Controller {
 	//Delete the content
 	public function getDelete($id)
 	{
-		$this->content->deleteContent($id);
+		$this->hasPermission('delete');
+		$this->repository->deleteContent($id);
 		return redirect()->back()->with('message', 'Content Deleted succssefuly');
-	}
-
-	//Display the content albums
-	public function getAlbums(Request $request, $id)
-	{
-		if($request->ajax()) 
-		{	
-			return $this->content->addContentAlbums($this->content->getContent($id), $request->input('ids'));
-		}
-		
-		$contentItem              = $this->content->getContentWithData($id);
-		$contentAlbums            = GalleryRepository::getAlbums(unserialize($contentItem->content_albums));
-		$contentAlbumMediaLibrary = GalleryRepository::getMediaLibrary('album', false, 'contentAlbumMediaLibrary');
-
-		return view('content::contentItems.contentalbums' ,compact('contentItem', 'contentAlbums', 'contentAlbumMediaLibrary'));
-	}
-
-	//Delete the content album
-	public function getDeletealbum($id, $albumId)
-	{
-		$this->content->deleteContentAlbums($this->content->getContent($id), $albumId);
-		return redirect()->back()->with('message', 'Album deleted succssefuly');
 	}
 }

@@ -1,5 +1,6 @@
 @extends('app')
 @section('content')
+
 <div class="container">
 	<div class="col-sm-8">
 
@@ -37,7 +38,7 @@
 					<div class="caption" align="center">
 						<p><h4>{{ $contentAlbum->album_name }}</h4>
 							<a class="btn btn-default" href='{{ url("/gallery/album/preview/$contentAlbum->id") }}' target="_blank">Preview</a>
-							<a class="btn btn-default" href='{{ url("/content/deletealbum", [$contentItem->id, $contentAlbum->id]) }}' role="button">Delete</a>
+							<a class="btn btn-default" href='{{ url("/content/contentalbums/deletealbum", [$contentItem->id, $contentAlbum->id]) }}' role="button">Delete</a>
 						</p>
 					</div>
 				</div>
@@ -47,7 +48,7 @@
 
 	</div>
 	<div class="col-sm-2">
-		<label for="album_name">Choos Galleries</label>
+		<label for="album_name">Choos Albums</label>
 		{!! $contentAlbumMediaLibrary !!}
 	</div>
 </div>

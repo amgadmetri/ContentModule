@@ -13,9 +13,10 @@
 
 Route::group(['prefix' => 'content'], function() {
 	Route::controllers([
-		'tags'         => 'TagsController',
-		'sectiontypes' => 'SectionTypesController',
-		'sections'     => 'SectionsController',
-		'/'            => 'ContentsController'
+		'tags'          => 'TagsController',
+		'sectiontypes'  => 'SectionTypesController',
+		'sections'      => 'SectionsController',
+		'contentalbums' => 'ContentAlbumsController',
+		'/'             => 'ContentsController'
 		]);
 });

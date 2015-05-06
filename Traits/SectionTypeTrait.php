@@ -32,7 +32,7 @@ trait SectionTypeTrait{
 		return $sectionType->delete();
 	}
 
-	public function getAllCategpries()
+	public function getAllCategories()
 	{
 		return ContentSectionTypes::where('section_type_name', '=', 'Category')->with('contentSections')->first();
 	}

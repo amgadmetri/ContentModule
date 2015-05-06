@@ -14,8 +14,22 @@
 				<th>{{ $tag->id }}</th>
 				<th>{{ $tag->tag_content }}</th>
 				<th>
-					<a class="btn btn-default" href='{{ url("/content/tags/update/$tag->id") }}' role="button">Edit</a> 
-					<a class="btn btn-default" href='{{ url("/content/tags/delete/$tag->id") }}' role="button">Delete</a> 
+					@if(\AclRepository::can('edit', 'Tags'))
+						<a 
+						class ="btn btn-default" 
+						href  ='{{ url("/content/tags/update/$tag->id") }}' 
+						role  ="button">
+						Edit
+						</a> 
+					@endif
+					@if(\AclRepository::can('delete', 'Tags'))
+						<a 
+						class ="btn btn-default" 
+						href  ='{{ url("/content/tags/delete/$tag->id") }}' 
+						role  ="button">
+						Delete
+						</a> 
+					@endif
 				</th>
 			</tr>
 			@endforeach

@@ -101,11 +101,11 @@
         Hold down the Ctrl (windows) / Command (Mac) button to select multiple sections.
         <select multiple name="section_id[]" class="form-control">
           @foreach($sectionType->contentSections as $section)
-          @if(in_array($section->id, $contentItem->contentSections->lists('id')))
-          <option value="{{ $section->id }}" selected>{{ $section->section_name }}</option>
-          @else
-          <option value="{{ $section->id }}">{{ $section->section_name }}</option>
-          @endif
+            @if(in_array($section->id, $contentItem->contentSections->lists('id')))
+             <option value="{{ $section->id }}" selected>{{ $section->section_name }}</option>
+            @else
+              <option value="{{ $section->id }}">{{ $section->section_name }}</option>
+            @endif
           @endforeach
         </select>  
       </div>

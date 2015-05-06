@@ -1,42 +1,47 @@
 <?php namespace App\Modules\Content\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Modules\Content\Http\Requests\SectionFormRequest;
 use App\Modules\Content\Repositories\ContentRepository;
 
-class SectionsController extends Controller {
+class SectionsController extends BaseController {
 
-	private $content;
 	public function __construct(ContentRepository $content)
 	{
-		$this->content = $content;
-		$this->middleware('AclAuthenticate');
+		parent::__construct($content, 'Sections');
 	}
 
 	public function getIndex()
 	{
-		$sections = $this->content->getAllSections();
+		$this->hasPermission('show');
+		$sections = $this->repository->getAllSections();
+		
 		return view('content::contentSections.viewsections', compact('sections'));
 	}
 
 	public function getCreate()
 	{
-		$sections     = $this->content->getAllSections();
-		$sectionTypes = $this->content->getAllSectionTypes();
+		$this->hasPermission('add');
+		$sections     = $this->repository->getAllSections();
+		$sectionTypes = $this->repository->getAllSectionTypes();
+
 		return view('content::contentSections.addsection', compact('sections', 'sectionTypes'));
 	}
 
 	public function postCreate(SectionFormRequest $request)
 	{
-		$this->content->createSection($request->all());
+		$this->hasPermission('add');
+		$this->repository->createSection($request->all());
+
 		return redirect()->back()->with('message', 'Section inserted in the database succssefuly');
 	}
 
 	public function getUpdate($id)
 	{
-		$section      = $this->content->getSection($id);
-		$sections     = $this->content->getAllSections();
-		$sectionTypes = $this->content->getAllSectionTypes();
+		$this->hasPermission('edit');
+		$section      = $this->repository->getSection($id);
+		$sections     = $this->repository->getAllSections();
+		$sectionTypes = $this->repository->getAllSectionTypes();
 
 		return view('content::contentSections.updatesection', compact('section', 'sections', 'sectionTypes'));
 	}
@@ -44,13 +49,17 @@ class SectionsController extends Controller {
 	//update the content
 	public function postUpdate(SectionFormRequest $request, $id)
 	{
-		$this->content->updateSection($id, $request->all());
+		$this->hasPermission('edit');
+		$this->repository->updateSection($id, $request->all());
+
 		return redirect()->back()->with('message', 'Section updated succssefuly');
 	}
 
 	public function getDelete($id)
 	{
-		$this->content->deleteSection($id);
+		$this->hasPermission('delete');
+		$this->repository->deleteSection($id);
+
 		return redirect()->back()->with('message', 'Section Deleted succssefuly');
 	}
 }

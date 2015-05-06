@@ -20,7 +20,6 @@ trait ContentItemTrait{
 
 	public function getAllContentsWithData($language = false)
 	{
-		$language = $language ?: LanguageRepository::getDefaultLanguage()->key;
 		$contents =  $this->getAllContents();
 		
 		foreach ($contents as $content) 
@@ -45,7 +44,6 @@ trait ContentItemTrait{
 
 	public function getContentData($obj, $language = false)
 	{
-		$language = $language ?: LanguageRepository::getDefaultLanguage()->key;
 		return LanguageRepository::getContent($obj->id, 'content', $language);
 	}
 
