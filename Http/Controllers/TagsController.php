@@ -2,19 +2,18 @@
 
 use App\Http\Controllers\BaseController;
 use App\Modules\Content\Http\Requests\TagFormRequest;
-use App\Modules\Content\Repositories\ContentRepository;
 
 class TagsController extends BaseController {
 	
-	public function __construct(ContentRepository $content)
+	public function __construct()
 	{
-		parent::__construct($content, 'Tags');
+		parent::__construct('Tags');
 	}
 
 	public function getIndex()
 	{
 		$this->hasPermission('show');
-		$tags = $this->repository->getAllTags();
+		$tags = \CMS::tags()->all();
 
 		return view('content::contentTags.viewtags', array('tags'=>$tags));
 	}
@@ -22,7 +21,7 @@ class TagsController extends BaseController {
 	public function getCreate()
 	{
 		$this->hasPermission('add');
-		$items = $this->repository->getAllTags();
+		$items = \CMS::tags()->all();
 
 		return view('content::contentTags.addtags', compact('items'));
 	}
@@ -30,7 +29,7 @@ class TagsController extends BaseController {
 	public function postCreate(TagFormRequest $request)
 	{
 		$this->hasPermission('add');
-		$this->repository->createTag($request->all());
+		\CMS::tags()->createTag($request->all());
 
 		return redirect()->back()->with('message', 'Tag inserted in the database succssefuly');
 	}
@@ -38,7 +37,7 @@ class TagsController extends BaseController {
 	public function getUpdate($id)
 	{
 		$this->hasPermission('edit');
-		$tags = $this->repository->getTag($id);
+		$tags = \CMS::tags()->find($id);
 
 		return view('content::contentTags.updatetag', compact('tags'));
 	}
@@ -47,7 +46,7 @@ class TagsController extends BaseController {
 	public function postUpdate(TagFormRequest $request, $id)
 	{
 		$this->hasPermission('edit');
-		$this->repository->updateTag($id, $request->all());
+		\CMS::tags()->update($id, $request->all());
 
 		return redirect()->back()->with('message', 'Tags updated succssefuly');
 	}
@@ -55,7 +54,7 @@ class TagsController extends BaseController {
 	public function getDelete($id)
 	{
 		$this->hasPermission('delete');
-		$this->repository->deleteTag($id);
+		\CMS::tags()->delete($id);
 
 		return redirect()->back()->with('message', 'Tag Deleted succssefuly');
 	}

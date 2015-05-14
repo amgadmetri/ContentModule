@@ -1,15 +1,13 @@
 <?php namespace App\Modules\Content\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Modules\Content\Repositories\ContentRepository;
-
 use Illuminate\Http\Request;
 
 class ContentAlbumsController extends BaseController {
 
-	public function __construct(ContentRepository $content)
+	public function __construct()
 	{
-		parent::__construct($content, 'Contents');
+		parent::__construct('ContentAlbums');
 	}
 
 	//Display the content albums
@@ -19,12 +17,12 @@ class ContentAlbumsController extends BaseController {
 		if($request->ajax()) 
 		{	
 			$this->hasPermission('add');
-			return $this->repository->addContentAlbums($this->repository->getContent($id), $request->input('ids'));
+			return \CMS::contentItems()->addContentAlbums(\CMS::contentItems()->find($id), $request->input('ids'));
 		}
 		
-		$contentItem              = $this->repository->getContentWithData($id);
-		$contentAlbums            = \GalleryRepository::getAlbums(unserialize($contentItem->content_albums));
-		$contentAlbumMediaLibrary = \GalleryRepository::getMediaLibrary('album', false, 'contentAlbumMediaLibrary');
+		$contentItem              = \CMS::contentItems()->getContentWithData($id);
+		$contentAlbums            = \CMS::albums()->getAlbums(unserialize($contentItem->content_albums));
+		$contentAlbumMediaLibrary = \CMS::galleries()->getMediaLibrary('album', false, 'contentAlbumMediaLibrary');
 
 		return view('content::contentItems.contentalbums' ,compact('contentItem', 'contentAlbums', 'contentAlbumMediaLibrary'));
 	}
@@ -33,7 +31,7 @@ class ContentAlbumsController extends BaseController {
 	public function getDeletealbum($id, $albumId)
 	{
 		$this->hasPermission('delete');
-		$this->repository->deleteContentAlbums($this->repository->getContent($id), $albumId);
+		\CMS::contentItems()->deleteContentAlbums(\CMS::contentItems()->find($id), $albumId);
 		return redirect()->back()->with('message', 'Album deleted succssefuly');
 	}
 }

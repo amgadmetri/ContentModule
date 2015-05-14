@@ -1,6 +1,6 @@
 @extends('app')
-
 @section('content')
+
 <div class="container">
   <div class="col-sm-9">
 
@@ -30,7 +30,7 @@
         <label for="section_type_id">Section Type:</label>
         <select name="parent_id" class="form-control">
           @foreach($sectionTypes as $sectionType)
-          <option @if($sectionType->id === $section->section_type_id) selected @endif value="{{ $sectionType->id }}">{{ $sectionType->section_type_name }}</option>
+            <option @if($sectionType->id === $section->section_type_id) selected @endif value="{{ $sectionType->id }}">{{ $sectionType->section_type_name }}</option>
           @endforeach
         </select>  
       </div>
@@ -40,7 +40,7 @@
         <select name="parent_id" class="form-control">
           <option value="0">New Section</option>
           @foreach($sections as $parentSection)
-          <option @if($parentSection->id === $section->parent_id) selected @endif value="{{ $parentSection->id }}">{{ $parentSection->section_name }}</option>
+            <option @if($parentSection->id === $section->parent_id) selected @endif value="{{ $parentSection->id }}">{{ $parentSection->section_name }}</option>
           @endforeach
         </select>  
       </div>

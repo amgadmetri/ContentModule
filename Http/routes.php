@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['prefix' => 'content'], function() {
+Route::group(['prefix' => 'admin/content'], function() {
 	Route::controllers([
 		'tags'          => 'TagsController',
 		'sectiontypes'  => 'SectionTypesController',

@@ -1,6 +1,6 @@
 @extends('app')
-
 @section('content')
+
 <div class="container">
   <div class="col-sm-9">
 
@@ -40,7 +40,7 @@
         <select name="parent_id" class="form-control">
           <option value="0">New Section</option>
           @foreach($sections as $section)
-          <option value="{{ $section->id }}">{{ $section->section_name }}</option>
+           <option value="{{ $section->id }}">{{ $section->section_name }}</option>
           @endforeach
         </select>  
       </div>

@@ -21,12 +21,6 @@ class ContentServiceProvider extends ServiceProvider
 		// methods or service providers to keep the code more focused and granular.
 		App::register('App\Modules\Content\Providers\RouteServiceProvider');
 
-		//Bind ContentRepository Facade to the IoC Container
-		App::bind('ContentRepository', function()
-		{
-			return new App\Modules\Content\Repositories\ContentRepository;
-		});
-
 		$this->registerNamespaces();
 	}
 

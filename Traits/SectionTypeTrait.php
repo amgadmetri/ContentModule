@@ -1,7 +1,6 @@
 <?php namespace App\Modules\Content\Traits;
 
 use App\Modules\Content\ContentSectionTypes;
-use DB;
 
 trait SectionTypeTrait{
 

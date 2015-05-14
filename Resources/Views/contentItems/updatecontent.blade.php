@@ -1,6 +1,6 @@
 @extends('app')
-
 @section('content')
+
 <div class="container">
   <div class="col-sm-8">
 
@@ -16,17 +16,17 @@
     @endif
     
     @if (Session::has('message'))
-    <div class="alert alert-success">
-      <ul>
-        <li>{{ Session::get('message') }}</li>
-      </ul>
-    </div>
+      <div class="alert alert-success">
+        <ul>
+          <li>{{ Session::get('message') }}</li>
+        </ul>
+      </div>
     @endif
 
     <div class="form-group">
       <label for="content_image">Content Image</label>
-      @if($content->contentImage)
-        <a href="{{ url('gallery/preview', $contentItem->contentImage->id) }}" target="_blank">
+      @if($contentItem->contentImage)
+        <a href="{{ url('admin/gallery/preview', $contentItem->contentImage->id) }}" target="_blank">
           <img class="img-responsive" src="{{ $contentItem->contentImage->path }}" width="200" height="200" id="content_image">
         </a>
       @else
@@ -115,11 +115,11 @@
       <div class="form-group">
         <select id="tokenize" multiple="multiple" name="tag_content[]" class="tokenize-sample">
           @foreach($tags as $tag)
-          @if(in_array($tag->id, $contentItem->contentTags->lists('id')))
-          <option value="{{ $tag->tag_content }}" selected>{{ $tag->tag_content }}</option>
-          @else
-          <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
-          @endif
+            @if(in_array($tag->id, $contentItem->contentTags->lists('id')))
+              <option value="{{ $tag->tag_content }}" selected>{{ $tag->tag_content }}</option>
+            @else
+              <option value="{{ $tag->tag_content }}">{{ $tag->tag_content }}</option>
+            @endif
           @endforeach
         </select>
       </div>

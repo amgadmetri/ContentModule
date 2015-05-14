@@ -1,23 +1,33 @@
-<?php namespace App\Modules\Content\Traits;
+<?php namespace App\Modules\Content\Repositories;
 
+use App\AbstractRepositories\AbstractRepository;
 use App\Modules\Content\ContentTags;
 use DB;
 
-trait TagTrait{
+
+class TagRepository extends AbstractRepository
+{
+	protected function getModel()
+	{
+		return 'App\Modules\Content\ContentTags';
+	}
+
+	protected function getRelations()
+	{
+		return ['contentItems'];
+	}
 
 	public function searchTag($query)
 	{
 		return DB::table('tags_relations')->
-				whereIn(
-				'tag_id', 
-				ContentTags::where('tag_content', 'like', '%' . $query . '%')->lists('id')
+				whereIn('tag_id', ContentTags::where('tag_content', 'like', '%' . $query . '%')->lists('id')
 				)->lists('item_id');
 	}
 
-	public function getTagContentsWithData($id, $language = false)
+	public function getTagContentsWithData($id, $language = false, $perPage = 15)
 	{
-		$contentTags = ContentTags::find($id);
-		$contents    = $contentTags->contentItems()->paginate(1);
+		$contentTags = $this->find($id);
+		$contents    = $contentTags->contentItems()->paginate($perPage);
 
 		foreach ($contents as $content) 
 		{
@@ -26,31 +36,9 @@ trait TagTrait{
 		return $contents;
 	}
 
-	public function getAllTags()
-	{
-		return ContentTags::with('contentItems')->get();
-	}
-
-	public function getTag($id)
-	{
-		return ContentTags::find($id);
-	}
-
 	public function createTag($data)
 	{
 		return ContentTags::firstOrCreate(['tag_content' => $data['tag_content']]);
-	}
-
-	public function updateTag($id, $data)
-	{
-		$tag = $this->getTag($id);
-		return $tag->update($data);
-	}
-
-	public function deleteTag($id)
-	{	
-		$tag = $this->getTag($id);
-		return $tag->delete();
 	}
 
 	public function addTags($obj, $data)

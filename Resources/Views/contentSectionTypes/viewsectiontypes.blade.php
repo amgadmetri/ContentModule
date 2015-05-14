@@ -1,5 +1,6 @@
 @extends('app')
 @section('content')
+
 <div class="container">
 	<div class="col-sm-9">
 
@@ -14,18 +15,18 @@
 				<th>{{ $sectionType->id }}</th>
 				<th>{{ $sectionType->section_type_name }}</th>
 				<th>
-					@if(\AclRepository::can('edit', 'SectionTypes'))
+					@if(\CMS::permissions()->can('edit', 'SectionTypes'))
 						<a 
 						class ="btn btn-default" 
-						href  ='{{ url("/content/sectiontypes/update/$sectionType->id") }}' 
+						href  ='{{ url("admin/content/sectiontypes/update/$sectionType->id") }}' 
 						role  ="button">
 						Edit
 						</a> 
 					@endif
-					@if(\AclRepository::can('delete', 'SectionTypes'))
+					@if(\CMS::permissions()->can('delete', 'SectionTypes'))
 						<a 
 						class ="btn btn-default" 
-						href  ='{{ url("/content/sectiontypes/delete/$sectionType->id") }}' 
+						href  ='{{ url("admin/content/sectiontypes/delete/$sectionType->id") }}' 
 						role  ="button">
 						Delete
 						</a> 

@@ -12,27 +12,27 @@ class CreateContentPermissions extends Migration
 	 */
 	public function up()
 	{
-		foreach (\InstallationRepository::getModuleParts('content') as $modulePart) 
+		foreach (\CMS::CoreModuleParts()->getModuleParts('content') as $modulePart) 
 		{
 			if ($modulePart->part_key === 'Contents') 
 			{
-				\AclRepository::insertDefaultItemPermissions(
-				$modulePart->part_key, 
-				$modulePart->id, 
-				[
-				'admin'   => ['show', 'add', 'edit', 'delete'],
-				'manager' => ['show', 'edit']
-				]);
+				\CMS::permissions()->insertDefaultItemPermissions(
+				                     $modulePart->part_key, 
+				                     $modulePart->id, 
+				                     [
+					                     'admin'   => ['show', 'add', 'edit', 'delete'],
+					                     'manager' => ['show', 'edit']
+				                     ]);
 			}
 			else
 			{
-				\AclRepository::insertDefaultItemPermissions(
-				$modulePart->part_key, 
-				$modulePart->id, 
-				[
-				'admin'   => ['show', 'add', 'edit', 'delete'],
-				'manager' => ['show', 'edit']
-				]);
+				\CMS::permissions()->insertDefaultItemPermissions(
+				                     $modulePart->part_key, 
+				                     $modulePart->id, 
+				                     [
+					                     'admin'   => ['show', 'add', 'edit', 'delete'],
+					                     'manager' => ['show', 'edit']
+				                     ]);
 			}
 		}
 	}
@@ -44,9 +44,9 @@ class CreateContentPermissions extends Migration
 	 */
 	public function down()
 	{
-		foreach (\InstallationRepository::getModuleParts('content') as $modulePart) 
+		foreach (\CMS::CoreModuleParts()->getModuleParts('content') as $modulePart) 
 		{
-			\AclRepository::deleteItemPermissions($modulePart->part_key);
+			\CMS::permissions()->deleteItemPermissions($modulePart->part_key);
 		}
 	}
 }

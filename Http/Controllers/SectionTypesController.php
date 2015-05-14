@@ -2,19 +2,18 @@
 
 use App\Http\Controllers\BaseController;
 use App\Modules\Content\Http\Requests\SectionTypeFormRequest;
-use App\Modules\Content\Repositories\ContentRepository;
 
 class SectionTypesController extends BaseController {
 
-	public function __construct(ContentRepository $content)
+	public function __construct()
 	{
-		parent::__construct($content, 'SectionTypes');
+		parent::__construct('SectionTypes');
 	}
 
 	public function getIndex()
 	{
 		$this->hasPermission('show');
-		$sectionTypes = $this->repository->getAllSectionTypes();
+		$sectionTypes = \CMS::sectionTypes()->all();
 		
 		return view('content::contentSectionTypes.viewsectiontypes', compact('sectionTypes'));
 	}
@@ -22,15 +21,13 @@ class SectionTypesController extends BaseController {
 	public function getCreate()
 	{
 		$this->hasPermission('add');
-		$sectionTypes = $this->repository->getAllSectionTypes();
-
-		return view('content::contentSectionTypes.addsectiontype', compact('sectionTypes'));
+		return view('content::contentSectionTypes.addsectiontype');
 	}
 
 	public function postCreate(SectionTypeFormRequest $request)
 	{
 		$this->hasPermission('add');
-		$this->repository->createSectionType($request->all());
+		\CMS::sectionTypes()->create($request->all());
 
 		return redirect()->back()->with('message', 'Section type inserted in the database succssefuly');
 	}
@@ -38,8 +35,8 @@ class SectionTypesController extends BaseController {
 	public function getUpdate($id)
 	{
 		$this->hasPermission('edit');
-		$sectionType  = $this->repository->getSectionType($id);
-		$sectionTypes = $this->repository->getAllSectionTypes();
+		$sectionType  = \CMS::sectionTypes()->find($id);
+		$sectionTypes = \CMS::sectionTypes()->all();
 
 		return view('content::contentSectionTypes.updatesectiontype', compact('sectionType', 'sectionTypes'));
 	}
@@ -48,7 +45,7 @@ class SectionTypesController extends BaseController {
 	public function postUpdate(SectionTypeFormRequest $request, $id)
 	{
 		$this->hasPermission('edit');
-		$this->repository->updateSectionType($id, $request->all());
+		\CMS::sectionTypes()->update($id, $request->all());
 
 		return redirect()->back()->with('message', 'Section Type updated succssefuly');
 	}
@@ -56,7 +53,7 @@ class SectionTypesController extends BaseController {
 	public function getDelete($id)
 	{
 		$this->hasPermission('delete');
-		$this->repository->deleteSectionType($id);
+		\CMS::sectionTypes()->delete($id);
 
 		return redirect()->back()->with('message', 'Section Type Deleted succssefuly');
 	}

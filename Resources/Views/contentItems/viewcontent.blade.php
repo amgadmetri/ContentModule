@@ -27,42 +27,42 @@
 				<th>{{ $contentItem->id }}</th>
 				<th>{{ $contentItem->alias }}</th>
 				<th>
-					@if(\AclRepository::can('edit', 'Contents'))
+					@if(\CMS::permissions()->can('edit', 'Contents'))
 						<a 
 						class ="btn btn-default" 
-						href  ='{{ url("/content/update/$contentItem->id") }}' 
+						href  ='{{ url("admin/content/update/$contentItem->id") }}' 
 						role  ="button">
 						Edit
 						</a> 
 					@endif
-					@if(\AclRepository::can('delete', 'Contents'))
+					@if(\CMS::permissions()->can('delete', 'Contents'))
 						<a 
 						class ="btn btn-default" 
-						href  ='{{ url("/content/delete/$contentItem->id") }}' 
+						href  ='{{ url("admin/content/delete/$contentItem->id") }}' 
 						role  ="button">
 						Delete
 						</a> 
 					@endif
-					@if(\AclRepository::can('show', 'LanguageContents'))
+					@if(\CMS::permissions()->can('show', 'LanguageContents'))
 						<a 
 						class ="btn btn-default" 
-						href  ='{{ url("/language/languagecontents/show/content/$contentItem->id") }}'
+						href  ='{{ url("admin/language/languagecontents/show/content/$contentItem->id") }}'
 						role  ="button">
 						Translations
 						</a> 
 					@endif
-					@if(\AclRepository::userHasGroup(\Auth::user()->id, 'admin'))
+					@if(\CMS::users()->userHasGroup(\Auth::user()->id, 'admin'))
 						<a 
 						class ="btn btn-default" 
-						href  ='{{ url("/Acl/permissions/show/content/$contentItem->id") }}'
+						href  ='{{ url("admin/Acl/permissions/show/content/$contentItem->id") }}'
 						role  ="button">
 						Permissions
 						</a>
 					@endif
-					@if(\AclRepository::can('show', 'ContentAlbums'))
+					@if(\CMS::permissions()->can('show', 'ContentAlbums'))
 						<a 
 						class ="btn btn-default" 
-						href  ='{{ url("/content/contentalbums/albums/$contentItem->id") }}'
+						href  ='{{ url("admin/content/contentalbums/albums/$contentItem->id") }}'
 						role  ="button">
 						Albums
 						</a>

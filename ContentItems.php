@@ -37,13 +37,13 @@ class ContentItems extends Model {
             $contentItem->contentSections()->detach();
             $contentItem->contentTags()->detach();
 
-            \LanguageRepository::deleteItemLanguageContents('content', $contentItem->id);
-            \AclRepository::deleteItemPermissions('content', $contentItem->id);
+            \CMS::languageContents()->deleteItemLanguageContents('content', $contentItem->id);
+            \CMS::permissions()->deleteItemPermissions('content', $contentItem->id);
         });
 
         ContentItems::created(function($contentItem)
         {
-           \AclRepository::insertDefaultItemPermissions('content', $contentItem->id);
+           \CMS::permissions()->insertDefaultItemPermissions('content', $contentItem->id);
         });
     }
 }

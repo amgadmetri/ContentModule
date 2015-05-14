@@ -37,8 +37,8 @@
 					@endif
 					<div class="caption" align="center">
 						<p><h4>{{ $contentAlbum->album_name }}</h4>
-							<a class="btn btn-default" href='{{ url("/gallery/album/preview/$contentAlbum->id") }}' target="_blank">Preview</a>
-							<a class="btn btn-default" href='{{ url("/content/contentalbums/deletealbum", [$contentItem->id, $contentAlbum->id]) }}' role="button">Delete</a>
+							<a class="btn btn-default" href='{{ url("admin/gallery/album/preview/$contentAlbum->id") }}' target="_blank">Preview</a>
+							<a class="btn btn-default" href='{{ url("admin/content/contentalbums/deletealbum", [$contentItem->id, $contentAlbum->id]) }}' role="button">Delete</a>
 						</p>
 					</div>
 				</div>
