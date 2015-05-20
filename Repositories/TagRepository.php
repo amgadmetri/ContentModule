@@ -1,62 +1,98 @@
 <?php namespace App\Modules\Content\Repositories;
 
 use App\AbstractRepositories\AbstractRepository;
-use App\Modules\Content\ContentTags;
 use DB;
 
-
 class TagRepository extends AbstractRepository
-{
+{	
+	/**
+	 * Return the model full namespace.
+	 * 
+	 * @return string
+	 */
 	protected function getModel()
 	{
-		return 'App\Modules\Content\ContentTags';
+		return 'App\Modules\Content\Tags';
 	}
 
+	/**
+	 * Return the module relations.
+	 * 
+	 * @return array
+	 */
 	protected function getRelations()
 	{
 		return ['contentItems'];
 	}
 
-	public function searchTag($query)
+	/**
+	 * Get a listing of tags when tag name match
+	 * the given query.
+	 * 
+	 * @param  string $query
+	 * @return array
+	 */
+	public function search($query)
 	{
-		return DB::table('tags_relations')->
-				whereIn('tag_id', ContentTags::where('tag_content', 'like', '%' . $query . '%')->lists('id')
-				)->lists('item_id');
+		return DB::table('contents_tags')->
+				   whereIn('tag_id', $this->model->where('tag_name', 'like', '%' . $query . '%')->lists('id'));
 	}
 
-	public function getTagContentsWithData($id, $language = false, $perPage = 15)
+	/**
+	 * Return the content item related to that tag.
+	 * 
+	 * @param  integer $id
+	 * @param  string  $language 
+	 * @param  integer $perPage
+	 * @return collection
+	 */
+	public function getTagContents($id, $language = false, $perPage = 15)
 	{
-		$contentTags = $this->find($id);
-		$contents    = $contentTags->contentItems()->paginate($perPage);
-
-		foreach ($contents as $content) 
-		{
-			$content->data = $this->getContentData($content, $language);
-		}
-		return $contents;
+		$contents = $this->find($id)->contentItems()->paginate($perPage);
+		return \CMS::contentItems()->getContentTranslations($contents, $language);
 	}
 
+	/**
+	 * If a tag exists with that name then return
+	 * it else create new one.
+	 * 
+	 * @param  array $data 
+	 * @return object
+	 */
 	public function createTag($data)
 	{
-		return ContentTags::firstOrCreate(['tag_content' => $data['tag_content']]);
+		return $this->model->firstOrCreate(['tag_name' => $data['tag_name']]);
 	}
 
-	public function addTags($obj, $data)
+	/**
+	 * Replace with the given list of tags to
+	 * the given object.
+	 * 
+	 * @param object $obj
+	 * @param array  $data
+	 * @return void
+	 */
+	public function addTags($obj, $data = array())
 	{
 		$this->deleteTags($obj);
-
-		if($data)
+		if ($data) 
 		{
 			foreach ($data as $tag) 
 			{
-				$contentTag = ContentTags::firstOrCreate(['tag_content' => $tag]);
-				$obj->ContentTags()->attach($contentTag->id);
+				$tag = $this->createTag(['tag_name' => $tag]);
+				$obj->Tags()->attach($tag->id);
 			}
 		}
 	}
 
+	/**
+	  * Delete all tags from the given object.
+	 * 
+	 * @param  object $obj
+	 * @return void
+	 */
 	public function deleteTags($obj)
 	{
-		return $obj->ContentTags()->detach();
+		return $obj->Tags()->detach();
 	}
 }

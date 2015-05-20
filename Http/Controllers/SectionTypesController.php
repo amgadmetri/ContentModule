@@ -5,56 +5,81 @@ use App\Modules\Content\Http\Requests\SectionTypeFormRequest;
 
 class SectionTypesController extends BaseController {
 
+	/**
+	 * Create new SectionTypesController instance.
+	 */
 	public function __construct()
 	{
 		parent::__construct('SectionTypes');
 	}
 
+	/**
+	 * Display a listing of the section types.
+	 * 
+	 * @return respnonse
+	 */
 	public function getIndex()
 	{
-		$this->hasPermission('show');
 		$sectionTypes = \CMS::sectionTypes()->all();
-		
-		return view('content::contentSectionTypes.viewsectiontypes', compact('sectionTypes'));
+		return view('content::sectiontypes.viewsectiontypes', compact('sectionTypes'));
 	}
 
+	/**
+	 * Show the form for creating a new section type.
+	 * 
+	 * @return response
+	 */
 	public function getCreate()
 	{
-		$this->hasPermission('add');
-		return view('content::contentSectionTypes.addsectiontype');
+		return view('content::sectiontypes.addsectiontype');
 	}
 
+	/**
+	 * Store a newly created section type in storage.
+	 * 
+	 * @param  SectionTypeFormRequest $request
+	 * @return response
+	 */
 	public function postCreate(SectionTypeFormRequest $request)
 	{
-		$this->hasPermission('add');
 		\CMS::sectionTypes()->create($request->all());
-
-		return redirect()->back()->with('message', 'Section type inserted in the database succssefuly');
+		return redirect()->back()->with('message', 'Section Type created succssefuly');
 	}
 
-	public function getUpdate($id)
+	/**
+	 * Show the form for editing the specified section type.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
+	public function getEdit($id)
 	{
-		$this->hasPermission('edit');
-		$sectionType  = \CMS::sectionTypes()->find($id);
-		$sectionTypes = \CMS::sectionTypes()->all();
-
-		return view('content::contentSectionTypes.updatesectiontype', compact('sectionType', 'sectionTypes'));
+		$sectionType = \CMS::sectionTypes()->find($id);
+		return view('content::sectiontypes.updatesectiontype', compact('sectionType'));
 	}
 
-	//update the content
-	public function postUpdate(SectionTypeFormRequest $request, $id)
+	/**
+	 * Update the specified section type in storage.
+	 * 
+	 * @param  SectionTypeFormRequest $request
+	 * @param  integer                $id
+	 * @return response
+	 */
+	public function postEdit(SectionTypeFormRequest $request, $id)
 	{
-		$this->hasPermission('edit');
 		\CMS::sectionTypes()->update($id, $request->all());
-
 		return redirect()->back()->with('message', 'Section Type updated succssefuly');
 	}
 
+	/**
+	 * Remove the specified section type from storage.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
 	public function getDelete($id)
 	{
-		$this->hasPermission('delete');
 		\CMS::sectionTypes()->delete($id);
-
 		return redirect()->back()->with('message', 'Section Type Deleted succssefuly');
 	}
 }

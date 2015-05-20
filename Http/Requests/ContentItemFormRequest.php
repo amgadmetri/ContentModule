@@ -3,14 +3,14 @@
 use App\Http\Requests\Request;
 
 
-class TagFormRequest extends Request {
+class ContentItemFormRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
 	 *
 	 * @return bool
 	 */
-
+	
 	public function authorize()
 	{
 		return true;
@@ -24,8 +24,10 @@ class TagFormRequest extends Request {
 	public function rules()
 	{
 		return [
-			'tag_name' 	=> 'required|max:255'
-        	
+		'alias'       => 'required|max:150|unique:content_items,id,' . $this->get('id'),
+		'title'       => 'required|max:255',
+		'description' => 'required|max:255',
+		'content'     => 'required'
 		];
 	}
 

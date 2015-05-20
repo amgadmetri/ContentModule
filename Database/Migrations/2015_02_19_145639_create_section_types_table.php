@@ -12,18 +12,18 @@ class CreateSectionTypesTable extends Migration
 	 */
 	public function up()
 	{
-		if ( ! Schema::hasTable('content_section_types'))
+		if ( ! Schema::hasTable('section_types'))
 		{
-			Schema::create('content_section_types', function(Blueprint $table) {
+			Schema::create('section_types', function(Blueprint $table) {
 				$table->bigIncrements('id');
 				$table->string('section_type_name', 255)->index();
 				$table->timestamps();
 			});
 
-			DB::table('content_section_types')->insert(
-				array(
-					'section_type_name' => 'category'
-					)
+			\CMS::sectionTypes()->insert(
+					[	
+						'section_type_name' => 'category'
+					]
 				);
 		}
 	}
@@ -35,7 +35,7 @@ class CreateSectionTypesTable extends Migration
 	 */
 	public function down()
 	{
-		if (Schema::hasTable('content_section_types'))
+		if (Schema::hasTable('section_types'))
 		{
 			Schema::drop('section_types');
 		}

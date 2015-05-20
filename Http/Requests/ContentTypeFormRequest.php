@@ -3,7 +3,7 @@
 use App\Http\Requests\Request;
 
 
-class TagFormRequest extends Request {
+class ContentTypeFormRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class TagFormRequest extends Request {
 	public function rules()
 	{
 		return [
-			'tag_name' 	=> 'required|max:255'
-        	
+			'content_type_name' => 'required|max:255',
 		];
 	}
 

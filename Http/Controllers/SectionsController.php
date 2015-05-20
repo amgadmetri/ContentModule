@@ -5,60 +5,97 @@ use App\Modules\Content\Http\Requests\SectionFormRequest;
 
 class SectionsController extends BaseController {
 
+	/**
+	 * Specify a list of extra permissions.
+	 * 
+	 * @var permissions
+	 */
+	protected $permissions = [
+	'getShow' => 'show', 
+	];
+
+	/**
+	 * Create new SectionsController instance.
+	 */
 	public function __construct()
 	{
 		parent::__construct('Sections');
 	}
 
-	public function getIndex()
+	/**
+	 * Display a listing of the sections.
+	 * 
+	 * @param  integer  $sectioTypeId
+	 * @return respnonse
+	 */
+	public function getShow($sectioTypeId)
 	{
-		$this->hasPermission('show');
-		$sections = \CMS::sections()->all();
+		$sectionType = \CMS::sectionTypes()->find($sectioTypeId);
+		$sections    = \CMS::sections()->findBy('section_type_id', $sectioTypeId);
 		
-		return view('content::contentSections.viewsections', compact('sections'));
+		return view('content::sections.viewsections', compact('sections', 'sectionType'));
 	}
 
-	public function getCreate()
+	/**
+	 * Show the form for creating a new section.
+	 * 
+	 * @param  integer $sectioTypeId
+	 * @return response
+	 */
+	public function getCreate($sectioTypeId)
 	{
-		$this->hasPermission('add');
-		$sections     = \CMS::sections()->all();
-		$sectionTypes = \CMS::sectionTypes()->all();
-
-		return view('content::contentSections.addsection', compact('sections', 'sectionTypes'));
+		$parentSections = \CMS::sections()->all();
+		return view('content::sections.addsection', compact('parentSections'));
 	}
 
-	public function postCreate(SectionFormRequest $request)
+	/**
+	 * Store a newly created section in storage.
+	 * 
+	 * @param  SectionFormRequest $request       
+	 * @param  integer            $sectionTypeId
+	 * @return response
+	 */
+	public function postCreate(SectionFormRequest $request, $sectionTypeId)
 	{
-		$this->hasPermission('add');
-		\CMS::sections()->create($request->all());
-
-		return redirect()->back()->with('message', 'Section inserted in the database succssefuly');
+		\CMS::sections()->create(array_merge($request->all(), ['section_type_id' => $sectionTypeId]));
+		return redirect()->back()->with('message', 'Section created succssefuly');
 	}
 
-	public function getUpdate($id)
+	/**
+	 * Show the form for editing the specified section.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
+	public function getEdit($id)
 	{
-		$this->hasPermission('edit');
-		$section      = \CMS::sections()->find($id);
-		$sections     = \CMS::sections()->all();
-		$sectionTypes = \CMS::sectionTypes()->all();
-
-		return view('content::contentSections.updatesection', compact('section', 'sections', 'sectionTypes'));
+		$section        = \CMS::sections()->find($id);
+		$parentSections = \CMS::sections()->findBy('section_type_id', $section->sectionType->id);
+		return view('content::sections.updatesection', compact('section', 'parentSections'));
 	}
 
-	//update the content
-	public function postUpdate(SectionFormRequest $request, $id)
+	/**
+	 * Update the specified section in storage.
+	 * 
+	 * @param  SectionFormRequest $request
+	 * @param  integer            $id
+	 * @return response
+	 */
+	public function postEdit(SectionFormRequest $request, $id)
 	{
-		$this->hasPermission('edit');
 		\CMS::sections()->update($id, $request->all());
-
 		return redirect()->back()->with('message', 'Section updated succssefuly');
 	}
 
+	/**
+	 * Remove the specified section from storage.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
 	public function getDelete($id)
 	{
-		$this->hasPermission('delete');
 		\CMS::sections()->delete($id);
-
-		return redirect()->back()->with('message', 'Section Deleted succssefuly');
+		return redirect()->back()->with('message', 'Section deleted succssefuly');
 	}
 }

@@ -5,57 +5,81 @@ use App\Modules\Content\Http\Requests\TagFormRequest;
 
 class TagsController extends BaseController {
 	
+	/**
+	 * Create new TagsController instance.
+	 */
 	public function __construct()
 	{
 		parent::__construct('Tags');
 	}
 
+	/**
+	 * Display a listing of the tags.
+	 * 
+	 * @return respnonse
+	 */
 	public function getIndex()
 	{
-		$this->hasPermission('show');
-		$tags = \CMS::tags()->all();
-
-		return view('content::contentTags.viewtags', array('tags'=>$tags));
+		return view('content::tags.viewtags');
 	}
 
+	/**
+	 * Show the form for creating a new tag.
+	 * 
+	 * @return response
+	 */
 	public function getCreate()
 	{
-		$this->hasPermission('add');
-		$items = \CMS::tags()->all();
-
-		return view('content::contentTags.addtags', compact('items'));
+		$tags = \CMS::tags()->all();
+		return view('content::tags.addtags', compact('tags'));
 	}
 
+	/**
+	 * Store a newly created tag in storage.
+	 * 
+	 * @param  TagFormRequest $request       
+	 * @return response
+	 */
 	public function postCreate(TagFormRequest $request)
 	{
-		$this->hasPermission('add');
 		\CMS::tags()->createTag($request->all());
-
-		return redirect()->back()->with('message', 'Tag inserted in the database succssefuly');
+		return redirect()->back()->with('message', 'Tag created succssefuly');
 	}
 
-	public function getUpdate($id)
+	/**
+	 * Show the form for editing the specified tag.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
+	public function getEdit($id)
 	{
-		$this->hasPermission('edit');
-		$tags = \CMS::tags()->find($id);
-
-		return view('content::contentTags.updatetag', compact('tags'));
+		$tag = \CMS::tags()->find($id);
+		return view('content::tags.updatetag', compact('tag'));
 	}
 
-	//update the content
-	public function postUpdate(TagFormRequest $request, $id)
+	/**
+	 * Update the specified tag in storage.
+	 * 
+	 * @param  TagFormRequest $request 
+	 * @param  integer        $id
+	 * @return response
+	 */
+	public function postEdit(TagFormRequest $request, $id)
 	{
-		$this->hasPermission('edit');
 		\CMS::tags()->update($id, $request->all());
-
-		return redirect()->back()->with('message', 'Tags updated succssefuly');
+		return redirect()->back()->with('message', 'Tag updated succssefuly');
 	}
 
+	/**
+	 * Remove the specified tag from storage.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
 	public function getDelete($id)
 	{
-		$this->hasPermission('delete');
 		\CMS::tags()->delete($id);
-
-		return redirect()->back()->with('message', 'Tag Deleted succssefuly');
+		return redirect()->back()->with('message', 'Tag deleted succssefuly');
 	}
 }

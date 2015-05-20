@@ -1,99 +1,134 @@
 <?php namespace App\Modules\Content\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Modules\Content\Http\Requests\ContentFormRequest;
+use App\Modules\Content\Http\Requests\ContentItemFormRequest;
 use Illuminate\Http\Request;
 
 class ContentsController extends BaseController {
 
+	/**
+	 * Specify a list of extra permissions.
+	 * 
+	 * @var permissions
+	 */
+	protected $permissions = [
+	'getShow' => 'show', 
+	];
+
+	/**
+	 * Create new ContentsController instance.
+	 */
 	public function __construct()
 	{
 		parent::__construct('Contents');
 	}
 
- 	//display all the contents
-	public function getIndex(Request $request)
+ 	/**
+ 	 * Display a listing of the content items.
+ 	 * 
+ 	 * @param  integer $contentTypeId
+ 	 * @return response
+ 	 */
+	public function getShow($contentTypeId, $status = 'all')
 	{
-		$this->hasPermission('show');
-		$status       = $request->input('status') ?: 'all';
-		$contentItems = \CMS::contentItems()->getAllContents($status);
-		$contentItems->setPath(url('admin/content?status=' . $request->input('status')));
+		$contentType  = \CMS::contentTypes()->find($contentTypeId);
+		$contentItems = \CMS::contentItems()->getAllContents($contentType->content_type_name, 'en', $status);
+		$contentItems->setPath(url('admin/content/show', [$contentTypeId, $status]));
 
-		return view('content::contentItems.viewcontent', compact('contentItems', 'status'));
+		return view('content::contentitems.viewcontent', compact('contentItems', 'status', 'contentType'));
 	}
 
-	//display the create form
-	public function getCreate(Request $request)
+	/**
+	 * Show the form for creating a new content item.
+	 * 
+	 * @return response
+	 */
+	public function getCreate()
 	{
-		$this->hasPermission('add');
-		if($request->ajax()) 
-		{
-			return \CMS::galleries()->getGalleries($request->input('ids'));
-		}
-
 		$sectionTypes             = \CMS::sectionTypes()->all();
 		$tags                     = \CMS::tags()->all();
-		
 		$contentImageMediaLibrary = \CMS::galleries()->getMediaLibrary('photo', true, 'contentImageMediaLibrary');
 		$mediaLibrary             = \CMS::galleries()->getMediaLibrary();
 
-		return view('content::contentItems.addcontent' ,compact('sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
+		return view('content::contentitems.addcontent' ,compact('sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
 	}
 
-	//insert the content in the database
-	public function postCreate(ContentFormRequest $request)
+	/**
+	 * Store a newly created content item in storage.
+	 * 
+	 * @param  ContentItemFormRequest $request      
+	 * @param  integer            $contentTypeId 
+	 * @return response
+	 */
+	public function postCreate(ContentItemFormRequest $request, $contentTypeId)
 	{
-		$this->hasPermission('add');
-		$data['user_id'] = \Auth::user()->id;
-		$contentItem     = \CMS::contentItem()->createContent(array_merge($request->all(), $data));
+		$data['user_id']         = \Auth::user()->id;
+		$data['content_type_id'] = $contentTypeId;
+		$contentItem             = \CMS::contentItem()->createContent(array_merge($request->all(), $data));
 
 		\CMS::sections()->addSections($contentItem, $request->input('section_id'));
-		\CMS::tags()->addtags($contentItem, $request->get('tag_content'));
+		\CMS::tags()->addtags($contentItem, $request->get('tag_name'));
 
 		return redirect()->back()->with('message', 'Content inserted in the database succssefuly');
 	}
 
-	//display the update form 
-	public function getUpdate(Request $request, $id)
+	/**
+	 * Show the form for editing the specified content item.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
+	public function getEdit($id)
 	{
-		$this->hasPermission('edit');
-		if($request->ajax()) 
-		{
-			$insertedGalleries = \CMS::galleries()->getGalleries($request->input('ids'));
-			return $insertedGalleries;
-		}
-
-		$contentItem               = \CMS::contentItems()->getContentWithData($id);
-		$contentItem->contentImage = \CMS::galleries()->find($contentItem->content_image);
-
+		$contentItem               = \CMS::contentItems()->getContent($id);
 		$sectionTypes              = \CMS::sectionTypes()->all();
 		$tags                      = \CMS::tags()->all();
-
 		$contentImageMediaLibrary  = \CMS::galleries()->getMediaLibrary('photo', true, 'contentImageMediaLibrary');
 		$mediaLibrary              = \CMS::galleries()->getMediaLibrary();
 
-		return view('content::contentItems.updatecontent',
-			compact('contentItem', 'sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
+		return view('content::contentitems.updatecontent', compact('contentItem', 'sectionTypes', 'tags', 'mediaLibrary', 'contentImageMediaLibrary'));
 	}
 
-	//update the content
-	public function postUpdate(ContentFormRequest $request, $id)
+	/**
+	 * Update the specified content item in storage.
+	 * 
+	 * @param  ContentItemFormRequest $request
+	 * @param  integer            $id
+	 * @return response
+	 */
+	public function postEdit(ContentItemFormRequest $request, $id)
 	{
-		$this->hasPermission('edit');
 		$data['user_id'] = \Auth::user()->id;
 		$contentItem     = \CMS::contentItems()->updateContent($id, array_merge($request->all(), $data));
 
 		\CMS::sections()->addSections($contentItem, $request->input('section_id'));
-		\CMS::tags()->addtags($contentItem, $request->get('tag_content'));
+		\CMS::tags()->addtags($contentItem, $request->get('tag_name'));
 		
 		return redirect()->back()->with('message', 'Content updated succssefuly');
 	}
 
-	//Delete the content
+	/**
+	 * Remove the specified section from storage.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
 	public function getDelete($id)
 	{
-		$this->hasPermission('delete');
 		\CMS::contentItems()->delete($id);
 		return redirect()->back()->with('message', 'Content Deleted succssefuly');
+	}
+
+	/**
+	 * Return a gallery array from the given ids,
+	 * handle the ajax request for inserting galleries
+	 * to the content.
+	 * 
+	 * @param  Request $request [description]
+	 * @return collection
+	 */
+	public function getContentgalleries(Request $request)
+	{
+		return \CMS::galleries()->getGalleries($request->input('ids'));
 	}
 }

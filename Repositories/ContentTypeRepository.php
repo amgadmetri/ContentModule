@@ -2,7 +2,7 @@
 
 use App\AbstractRepositories\AbstractRepository;
 
-class SectionTypeRepository extends AbstractRepository
+class ContentTypeRepository extends AbstractRepository
 {	
 	/**
 	 * Return the model full namespace.
@@ -11,7 +11,7 @@ class SectionTypeRepository extends AbstractRepository
 	 */
 	protected function getModel()
 	{
-		return 'App\Modules\Content\SectionTypes';
+		return 'App\Modules\Content\ContentTypes';
 	}
 
 	/**
@@ -21,6 +21,6 @@ class SectionTypeRepository extends AbstractRepository
 	 */
 	protected function getRelations()
 	{
-		return ['sections'];
+		return ['contentItems'];
 	}
 }

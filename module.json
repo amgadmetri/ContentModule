@@ -6,5 +6,5 @@
     "repo_link": "https://github.com/amgadmetri/MarvelContent.git",
     "type" : "plugin",
 	"enabled": true,
-    "module_parts": ["Contents", "SectionTypes", "Sections", "Tags", "ContentAlbums"]
+    "module_parts": ["Contents", "ContentTypes", "SectionTypes", "Sections", "Tags", "ContentAlbums"]
 }
