@@ -124,7 +124,7 @@ class ContentsController extends BaseController {
 	 * handle the ajax request for inserting galleries
 	 * to the content.
 	 * 
-	 * @param  Request $request [description]
+	 * @param  Request $request
 	 * @return collection
 	 */
 	public function getContentgalleries(Request $request)

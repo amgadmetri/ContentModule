@@ -101,12 +101,12 @@ class ContentItemRepository extends AbstractRepository
 		{
 			foreach ($obj as $element) 
 			{
-				$element->data = \CMS::languageContents()->getContent($element->id, 'content', $language);
+				$element->data = \CMS::languageContents()->getTranslations($element->id, 'content', $language);
 			}
 		}
 		else
 		{
-			$obj->data = \CMS::languageContents()->getContent($obj->id, 'content', $language);
+			$obj->data = \CMS::languageContents()->getTranslations($obj->id, 'content', $language);
 		}
 		return $obj;
 	}
@@ -118,14 +118,13 @@ class ContentItemRepository extends AbstractRepository
 	 * @return object
 	 */
 	public function createContent($data)
-	{
+	{	
 		$contentItem = $this->create($data);
-		\CMS::languageContents()->createLanguageContent([
-			'title'       => ['title', 'description', 'content'],
-			'key'         => ['title', 'description', 'content'], 
-			'value'       => [$data['title'], $data['description'], $data['content']],
-			'language_id' => \CMS::languages()->getDefaultLanguage()->id
-			], 'content', $contentItem->id);
+		\CMS::languageContents()->insertLanguageContent([
+				'title'       => $data['title'],
+				'description' => $data['description'], 
+				'content'     => $data['content'],
+				], 'content', $contentItem->id);
 
 		return $contentItem;
 	}
