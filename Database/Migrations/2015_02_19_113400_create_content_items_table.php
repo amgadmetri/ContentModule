@@ -17,7 +17,7 @@ class CreateContentItemsTable extends Migration
 			Schema::create('content_items', function(Blueprint $table) {
 				$table->bigIncrements('id');;
 				$table->string('alias', 150)->index();
-				$table->string('content_image', 200);
+				$table->bigInteger('content_image');
 				$table->string('content_albums', 200);
 				$table->enum('status', ['published', 'draft', 'suspend'])->default('draft')->index();
 				$table->bigInteger('content_views')->unsigned()->default('0');

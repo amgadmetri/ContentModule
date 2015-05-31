@@ -17,14 +17,9 @@ class CreateCotntentTypesTable extends Migration
 			Schema::create('content_types', function(Blueprint $table) {
 				$table->bigIncrements('id');
 				$table->string('content_type_name', 255)->index();
+				$table->string('theme', 255)->index();
 				$table->timestamps();
 			});
-
-			\CMS::contentTypes()->insert(
-					[
-						'content_type_name' => 'article'
-					]
-				);
 		}
 	}
 

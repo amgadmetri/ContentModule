@@ -21,7 +21,7 @@ class ContentItemRepository extends AbstractRepository
 	 */
 	protected function getRelations()
 	{
-		return ['sections', 'tags', 'user'];
+		return ['sections', 'tags', 'user', 'contentType'];
 	}
 
 	/**
@@ -139,12 +139,11 @@ class ContentItemRepository extends AbstractRepository
 	public function updateContent($id, $data)
 	{
 		$this->update($id, $data);
-		\CMS::languageContents()->createLanguageContent([
-			'title'       => ['title', 'description', 'content'],
-			'key'         => ['title', 'description', 'content'], 
-			'value'       => [$data['title'], $data['description'], $data['content']],
-			'language_id' => \CMS::languages()->getDefaultLanguage()->id
-			], 'content', $id);
+		\CMS::languageContents()->insertLanguageContent([
+				'title'       => $data['title'],
+				'description' => $data['description'], 
+				'content'     => $data['content'],
+				], 'content', $contentItem->id);
 
 		return $this->find($id);
 	}

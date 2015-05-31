@@ -16,7 +16,18 @@ class ContentTypes extends Model {
      * 
      * @var fillable
      */
-	protected $fillable = ['content_type_name'];
+	protected $fillable = ['content_type_name', 'theme'];
+
+	/**
+	 * Get the name that will be displayed in the 
+	 * menu link.
+	 * 
+	 * @return string
+	 */
+	public function getLinkNameAttribute()
+	{
+		return $this->attributes['content_type_name'];
+	}
 
 	/**
      * Get the content type content items.

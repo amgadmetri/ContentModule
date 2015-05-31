@@ -4,21 +4,21 @@
 <div class="container">
 	<div class="col-sm-9">
 
-		<h3>{{ $sectionType->section_type_name }}'s Sections</h3>
+		<h3>All {{ $sectionType->section_type_name }}</h3>
 		@if(\CMS::permissions()->can('add', 'Sections'))
 			<a 
 			class ="btn btn-default" href='{{ url("admin/content/sections/create", $sectionType->id) }}' 
 			role  ="button">
-			Add Sections
+			Add {{ $sectionType->section_type_name }}
 			</a>
 		@endif
 
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th>Section id</th>
-					<th>Section title</th>
-					<th>Section is active</th>
+					<th>id</th>
+					<th>title</th>
+					<th>is active</th>
 					<th>Options</th>
 				</tr>
 			</thead>

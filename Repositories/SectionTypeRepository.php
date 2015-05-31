@@ -23,4 +23,16 @@ class SectionTypeRepository extends AbstractRepository
 	{
 		return ['sections'];
 	}
+
+	/**
+	 * Return all the sections belong to the
+	 * specified section type name.
+	 * 
+	 * @param  string $contentTypeName
+	 * @return collection
+	 */
+	public function getAll($sectionTypeName, $perPage)
+	{
+		return $this->first('section_type_name', $sectionTypeName)->sections()->paginate($perPage);
+	}
 }

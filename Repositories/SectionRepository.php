@@ -22,7 +22,7 @@ class SectionRepository extends AbstractRepository
 	 */
 	protected function getRelations()
 	{
-		return ['contentItems', 'sectionType', 'childs'];
+		return ['contentItems', 'sectionType', 'children'];
 	}
 
 	/**
@@ -98,7 +98,7 @@ class SectionRepository extends AbstractRepository
 	 */
 	public function getSectionTree($link = '', $parent_id = 0)
 	{
-		$sectionType = \CMS::sectionTypes()->first('section_type_name', 'Category');
+		$sectionType = \CMS::sectionTypes()->first('section_type_name', 'Categories');
 		$link        = $link ?: url('category');
 		$html        = '';
 		

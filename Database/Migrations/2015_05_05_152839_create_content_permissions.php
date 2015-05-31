@@ -14,14 +14,14 @@ class CreateContentPermissions extends Migration
 	{
 		foreach (\CMS::CoreModuleParts()->getModuleParts('content') as $modulePart) 
 		{
-			if ($modulePart->part_key === 'Contents') 
+			if ($modulePart->part_key === 'ContentTypes') 
 			{
 				\CMS::permissions()->insertDefaultItemPermissions(
 				                     $modulePart->part_key, 
 				                     $modulePart->id, 
 				                     [
-					                     'admin'   => ['show', 'add', 'edit', 'delete'],
-					                     'manager' => ['show', 'edit']
+					                     'admin'   => ['show'],
+					                     'manager' => ['show']
 				                     ]);
 			}
 			else

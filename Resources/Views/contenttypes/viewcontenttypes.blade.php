@@ -18,23 +18,7 @@
 					<th>{{ $contentType->id }}</th>
 					<th>{{ $contentType->content_type_name }}</th>
 					<th>
-						@if(\CMS::permissions()->can('edit', 'ContentTypes'))
-							<a 
-							class ="btn btn-default" 
-							href  ='{{ url("admin/content/contenttypes/edit/$contentType->id") }}' 
-							role  ="button">
-							Edit
-							</a> 
-						@endif
-						@if(\CMS::permissions()->can('delete', 'ContentTypes'))
-							<a 
-							class ="btn btn-default" 
-							href  ='{{ url("admin/content/contenttypes/delete/$contentType->id") }}' 
-							role  ="button">
-							Delete
-							</a> 
-						@endif
-						@if(\CMS::permissions()->can('delete', 'Contents'))
+						@if(\CMS::permissions()->can('show', 'Contents'))
 							<a 
 							class ="btn btn-default" 
 							href  ='{{ url("admin/content/show", $contentType->id) }}' 

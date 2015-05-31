@@ -19,6 +19,17 @@ class SectionTypes extends Model {
 	protected $fillable = ['section_type_name'];
 
 	/**
+	 * Get the name that will be displayed in the 
+	 * menu link.
+	 * 
+	 * @return string
+	 */
+	public function getLinkNameAttribute()
+	{
+		return $this->attributes['section_type_name'];
+	}
+
+	/**
      * Get the section type sections.
      * 
      * @return collection

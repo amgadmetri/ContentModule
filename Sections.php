@@ -26,6 +26,17 @@ class Sections extends Model {
 	protected $casts    = ['is_active' => 'boolean'];
 
 	/**
+	 * Get the name that will be displayed in the 
+	 * menu link.
+	 * 
+	 * @return string
+	 */
+	public function getLinkNameAttribute()
+	{
+		return $this->attributes['section_name'];
+	}
+
+	/**
 	 * Get True or False based on the value
 	 * of is active field.
 	 * 
@@ -61,11 +72,11 @@ class Sections extends Model {
 	}
 
 	/**
-	 * Get the section childs.
+	 * Get the section children.
 	 * 
 	 * @return collection
 	 */
-	public function childs()
+	public function children()
     {
         return $this->hasMany('App\Modules\Content\Sections', 'parent_id');
     }

@@ -19,8 +19,19 @@ class ContentItems extends Model {
     protected $fillable = ['user_id', 'status', 'alias', 'content_image', 'content_views', 'content_type_id'];
 
     /**
+     * Get the name that will be displayed in the 
+     * menu link.
+     * 
+     * @return string
+     */
+    public function getLinkNameAttribute()
+    {
+        return \CMS::contentItem()->getContent($this->attributes['id'])->data['title'];
+    }
+
+    /**
      * Return the gallery object from the
-     * stored gallery id ib the content.
+     * stored gallery id of the content.
      * 
      * @return object
      */

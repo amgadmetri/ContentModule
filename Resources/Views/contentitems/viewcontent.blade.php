@@ -4,11 +4,11 @@
 <div class="container">
 	<div class="col-sm-9">	
 		
-		<h3>{{ $contentType->content_type_name }}'s Contents</h3>
+		<h3>All {{ $contentType->content_type_name }}</h3>
 		<div class="col-sm-5">
 			<form class="form-inline" method="get" id="content_status_form">  
 				<div class="form-group">
-					<label for="status">Content Status</label>
+					<label for="status">{{ $contentType->content_type_name }} Status</label>
 					<select name="status" class="form-control">
 						<option @if($status === "all") selected @endif value="all">All</option>
 						<option @if($status === "published") selected @endif value="published">Published</option>
@@ -24,7 +24,7 @@
 				<a 
 				class ="btn btn-default" href='{{ url("admin/content/create", $contentType->id) }}' 
 				role  ="button">
-				Add Content
+				Add {{ $contentType->content_type_name }}
 				</a>
 			@endif
 		</div>
@@ -34,8 +34,8 @@
 		<br>
 		<table class="table table-striped">
 			<tr>
-				<th>Content ID</th>
-				<th>Content alias</th>
+				<th>ID</th>
+				<th>alias</th>
 				<th>Options</th>
 			</tr>
 			@foreach($contentItems as $contentItem)

@@ -41,7 +41,7 @@
       <input type  ="hidden" name  ="content_image">
       
       <div class="form-group">
-        <label for="alias">Content Alias</label>
+        <label for="alias">Alias</label>
         <input 
         type="text" 
         class="form-control" 
@@ -53,7 +53,7 @@
       </div>
       
       <div class="form-group">
-        <label for="status">Content Status</label>
+        <label for="status">Status</label>
         <select name="status" class="form-control">
           <option @if($contentItem->status === 'published') selected @endif value="published">Published</option>
           <option @if($contentItem->status === 'draft') selected @endif value="draft">Draft</option>
@@ -62,7 +62,7 @@
       </div>
       
       <div class="form-group">
-        <label for="title">Content Title</label>
+        <label for="title">Title</label>
         <input 
         type="text" 
         class="form-control" 
@@ -74,13 +74,13 @@
       </div>
       
       <div class="form-group">
-        <label for="description">Content Description</label>
+        <label for="description">Description</label>
         <input 
         type="text" 
         class="form-control" 
         name="description" 
         value="{{ $contentItem->data['description'] }}" 
-        placeholder="Content Description .." 
+        placeholder="Add here Description .." 
         aria-describedby="sizing-addon2"
         >
       </div>
@@ -91,7 +91,7 @@
         class="form-control" 
         rows="3" name="content" 
         value="" 
-        placeholder="Content Description .." 
+        placeholder="Add here Content .." 
         aria-describedby="sizing-addon2">{{ $contentItem->data['content'] }}</textarea>
       </div>
 
@@ -124,7 +124,7 @@
         </select>
       </div>
       
-      <button type="submit" class="btn btn-primary form-control">Update Content</button>
+      <button type="submit" class="btn btn-primary form-control">Update</button>
     </form>
   </div>
 

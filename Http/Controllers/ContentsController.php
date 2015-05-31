@@ -69,7 +69,7 @@ class ContentsController extends BaseController {
 		\CMS::sections()->addSections($contentItem, $request->input('section_id'));
 		\CMS::tags()->addtags($contentItem, $request->get('tag_name'));
 
-		return redirect()->back()->with('message', 'Content inserted in the database succssefuly');
+		return redirect()->back()->with('message', 'Content created succssefuly');
 	}
 
 	/**
@@ -98,9 +98,7 @@ class ContentsController extends BaseController {
 	 */
 	public function postEdit(ContentItemFormRequest $request, $id)
 	{
-		$data['user_id'] = \Auth::user()->id;
-		$contentItem     = \CMS::contentItems()->updateContent($id, array_merge($request->all(), $data));
-
+		$contentItem = \CMS::contentItems()->updateContent($id, $request->all());
 		\CMS::sections()->addSections($contentItem, $request->input('section_id'));
 		\CMS::tags()->addtags($contentItem, $request->get('tag_name'));
 		
@@ -108,7 +106,7 @@ class ContentsController extends BaseController {
 	}
 
 	/**
-	 * Remove the specified section from storage.
+	 * Remove the specified widget from storage.
 	 * 
 	 * @param  integer $id
 	 * @return response

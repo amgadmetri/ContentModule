@@ -28,9 +28,9 @@
       <input name="section_type_id" type="hidden" value="{{ csrf_token() }}">
 
       <div class="form-group">
-        <label for="parent_id">Parent Section:</label>
+        <label for="parent_id">Parent:</label>
         <select name="parent_id" class="form-control">
-          <option value="0">New Section</option>
+          <option value="0">New</option>
             @foreach($parentSections as $parentSection)
                 <option value="{{ $parentSection->id }}">{{ $parentSection->section_name }}</option>
             @endforeach
@@ -39,8 +39,8 @@
 
 
       <div class="form-group">
-        <label for="section_name">Section Name:</label>
-        <input type="text" class="form-control" name="section_name" value="{{ old('section_name') }}" placeholder="Add section here .." aria-describedby="sizing-addon2">
+        <label for="section_name">Name:</label>
+        <input type="text" class="form-control" name="section_name" value="{{ old('section_name') }}" placeholder="Add name here .." aria-describedby="sizing-addon2">
       </div>
 
       <div class="form-group">
@@ -51,7 +51,7 @@
         </select>  
       </div>
 
-      <button type="submit" class="btn btn-primary form-control">Add Section</button>
+      <button type="submit" class="btn btn-primary form-control">Add</button>
     </form>
 
   </div>

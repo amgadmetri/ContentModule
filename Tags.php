@@ -18,6 +18,17 @@ class Tags extends Model {
      */
 	protected $fillable = ['tag_name'];
 
+    /**
+     * Get the name that will be displayed in the 
+     * menu link.
+     * 
+     * @return string
+     */
+    public function getLinkNameAttribute()
+    {
+        return $this->attributes['tag_name'];
+    }
+
 	/**
      * Get the tag content items.
      * 

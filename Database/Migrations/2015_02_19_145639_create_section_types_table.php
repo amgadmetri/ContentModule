@@ -22,7 +22,7 @@ class CreateSectionTypesTable extends Migration
 
 			\CMS::sectionTypes()->insert(
 					[	
-						'section_type_name' => 'category'
+						'section_type_name' => 'Categories'
 					]
 				);
 		}

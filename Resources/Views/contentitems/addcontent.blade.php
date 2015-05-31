@@ -25,7 +25,7 @@
     <div class="col-sm-12">
       <div class="col-sm-6">
        <div class="form-group">
-        <label for="content_image">Content Image</label>
+        <label for="content_image">Image</label>
         <img class="img-responsive" src="http://placehold.it/200x200" width="200" height="200" id="content_image">
         <br>
         {!! $contentImageMediaLibrary !!}
@@ -38,7 +38,7 @@
       <input type  ="hidden" name  ="content_image">
 
       <div class="form-group">
-        <label for="alias">Content Alias</label>
+        <label for="alias">Alias</label>
         <input 
         type             ="text" 
         class            ="form-control" 
@@ -50,7 +50,7 @@
       </div>
 
       <div class="form-group">
-        <label for="status">Content Status</label>
+        <label for="status">Status</label>
         <select name="status" class="form-control">
           <option @if(old('status') === "published") selected @endif value="published">Published</option>
           <option @if(old('status') === "draft") selected @endif value="draft">Draft</option>
@@ -59,7 +59,7 @@
       </div>
 
       <div class="form-group">
-        <label for="title">Content Title</label>
+        <label for="title">Title</label>
         <input 
         type             ="text" 
         class            ="form-control" 
@@ -71,13 +71,13 @@
       </div>
 
       <div class="form-group">
-        <label for="description">Content Description</label>
+        <label for="description">Description</label>
         <input 
         type             ="text" 
         class            ="form-control" 
         name             ="description" 
         value            ="{{ old('description') }}" 
-        placeholder      ="Content Description .." 
+        placeholder      ="Description .." 
         aria-describedby ="sizing-addon2"
         >
       </div>
@@ -88,7 +88,7 @@
         class            ="form-control" 
         rows             ="3" name="content" 
         value            ="{{ old('content') }}" 
-        placeholder      ="Add content here .."
+        placeholder      ="Add here Content .."
         aria-describedby ="sizing-addon2">
         </textarea>
       </div>
@@ -114,7 +114,7 @@
         @endforeach
       </select>
 
-      <button type="submit" class="btn btn-primary form-control">Add Content</button>
+      <button type="submit" class="btn btn-primary form-control">Add</button>
     </form>
   </div>  
   
