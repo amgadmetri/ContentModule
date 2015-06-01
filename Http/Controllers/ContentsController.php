@@ -32,7 +32,7 @@ class ContentsController extends BaseController {
 	public function getShow($contentTypeId, $status = 'all')
 	{
 		$contentType  = \CMS::contentTypes()->find($contentTypeId);
-		$contentItems = \CMS::contentItems()->getAllContents($contentType->content_type_name, 'en', $status);
+		$contentItems = \CMS::contentItems()->getAllContents($contentType->content_type_name, false, $status);
 		$contentItems->setPath(url('admin/content/show', [$contentTypeId, $status]));
 
 		return view('content::contentitems.viewcontent', compact('contentItems', 'status', 'contentType'));
