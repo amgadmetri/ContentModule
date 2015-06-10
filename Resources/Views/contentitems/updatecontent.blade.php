@@ -26,7 +26,7 @@
     <div class="form-group">
       <label for="content_image">Content Image</label>
       @if($contentItem->contentImage)
-        <a href="{{ url('admin/gallery/preview', $contentItem->contentImage->id) }}" target="_blank">
+        <a href="{{ url('admin/gallery/show', $contentItem->contentImage->id) }}" target="_blank">
           <img class="img-responsive" src="{{ $contentItem->contentImage->path }}" width="200" height="200" id="content_image">
         </a>
       @else
