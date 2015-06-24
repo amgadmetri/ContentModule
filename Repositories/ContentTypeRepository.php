@@ -21,7 +21,7 @@ class ContentTypeRepository extends AbstractRepository
 	 */
 	protected function getRelations()
 	{
-		return ['contentItems'];
+		return ['contentItems', 'sectionTypes'];
 	}
 
 	/**
@@ -48,5 +48,29 @@ class ContentTypeRepository extends AbstractRepository
 	public function getAll($contentTypeName, $perPage)
 	{
 		return $this->first('content_type_name', $contentTypeName)->contentItems()->paginate($perPage);
+	}
+
+	/**
+	 * Store the content type and it's section types 
+	 * in to the storage.
+	 * 
+	 * @param  array $data 
+	 * @return void
+	 */
+	public function createContentTypes($data)
+	{	
+		foreach ($data as $contentTypeData) 
+		{
+			$contentType = $this->create($contentTypeData);
+			if (array_key_exists('section_types', $contentTypeData)) 
+			{
+				foreach ($contentTypeData['section_types'] as $sectionTypeData) 
+				{
+					\CMS::sectionTypes()->create(['section_type_name' => $sectionTypeData])->
+					                      contentTypes()->
+					                      attach($contentType->id);
+				}
+			}
+		}
 	}
 }

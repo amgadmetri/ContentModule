@@ -39,6 +39,19 @@ class ContentTypes extends Model {
 		return $this->hasMany('App\Modules\Content\ContentItems', 'content_type_id');
 	}
 
+	/**
+     * Get the content type section types.
+     * 
+     * @return collection
+     */
+    public function sectionTypes()
+    {
+        return $this->belongsToMany('App\Modules\Content\SectionTypes',
+                                    'content_types_section_types',
+                                    'content_type_id',
+                                    'section_type_id')->withTimestamps();
+    }
+
 	public static function boot()
 	{
 		parent::boot();

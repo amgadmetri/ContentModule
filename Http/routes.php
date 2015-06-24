@@ -14,10 +14,8 @@
 Route::group(['prefix' => 'admin/content'], function() {
 	Route::controllers([
 		'tags'          => 'TagsController',
-		'sectiontypes'  => 'SectionTypesController',
 		'sections'      => 'SectionsController',
 		'contentalbums' => 'ContentAlbumsController',
-		'contenttypes'  => 'ContentTypesController',
 		'/'             => 'ContentsController'
 		]);
 });

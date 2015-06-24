@@ -43,9 +43,9 @@ class ContentsController extends BaseController {
 	 * 
 	 * @return response
 	 */
-	public function getCreate()
+	public function getCreate($contentTypeId)
 	{
-		$sectionTypes             = \CMS::sectionTypes()->all();
+		$sectionTypes             = \CMS::contentTypes()->find($contentTypeId)->sectionTypes;
 		$tags                     = \CMS::tags()->all();
 		$contentImageMediaLibrary = \CMS::galleries()->getMediaLibrary('photo', true, 'contentImageMediaLibrary');
 		$mediaLibrary             = \CMS::galleries()->getMediaLibrary();
@@ -57,7 +57,7 @@ class ContentsController extends BaseController {
 	 * Store a newly created content item in storage.
 	 * 
 	 * @param  ContentItemFormRequest $request      
-	 * @param  integer            $contentTypeId 
+	 * @param  integer            	  $contentTypeId 
 	 * @return response
 	 */
 	public function postCreate(ContentItemFormRequest $request, $contentTypeId)
@@ -81,7 +81,7 @@ class ContentsController extends BaseController {
 	public function getEdit($id)
 	{
 		$contentItem               = \CMS::contentItems()->getContent($id);
-		$sectionTypes              = \CMS::sectionTypes()->all();
+		$sectionTypes              = $contentItem->contentType->sectionTypes;
 		$tags                      = \CMS::tags()->all();
 		$contentImageMediaLibrary  = \CMS::galleries()->getMediaLibrary('photo', true, 'contentImageMediaLibrary');
 		$mediaLibrary              = \CMS::galleries()->getMediaLibrary();

@@ -21,7 +21,7 @@ class SectionTypeRepository extends AbstractRepository
 	 */
 	protected function getRelations()
 	{
-		return ['sections'];
+		return ['sections', 'contentTypes'];
 	}
 
 	/**
