@@ -1,6 +1,6 @@
 <?php namespace App\Modules\Content\Repositories;
 
-use App\AbstractRepositories\AbstractRepository;
+use App\Modules\Core\AbstractRepositories\AbstractRepository;
 use DB;
 
 class TagRepository extends AbstractRepository

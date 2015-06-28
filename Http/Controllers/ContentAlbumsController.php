@@ -1,6 +1,6 @@
 <?php namespace App\Modules\Content\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
+use App\Modules\Core\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 
 class ContentAlbumsController extends BaseController {

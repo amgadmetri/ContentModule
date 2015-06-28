@@ -1,6 +1,6 @@
 <?php namespace App\Modules\Content\Repositories;
 
-use App\AbstractRepositories\AbstractRepository;
+use App\Modules\Core\AbstractRepositories\AbstractRepository;
 
 class SectionTypeRepository extends AbstractRepository
 {	
