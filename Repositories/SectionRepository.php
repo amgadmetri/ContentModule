@@ -96,10 +96,11 @@ class SectionRepository extends AbstractRepository
 	 * @param  integer $parent_id
 	 * @return string
 	 */
-	public function getSectionTree($link = '', $parent_id = 0)
+	public function getSectionTree($path = false, $parent_id = 0)
 	{
+		$themeName   = \CMS::CoreModules()->getActiveTheme()->module_key;
 		$sectionType = \CMS::sectionTypes()->first('section_type_name', 'Categories');
-		$link        = $link ?: url('category');
+		$path        = $path ? $themeName . "::" . $path : 'content::sections.parts.categorytemplate';
 		$html        = '';
 		
 		if ($sectionType) 
@@ -108,7 +109,7 @@ class SectionRepository extends AbstractRepository
 			{
 				if ($section->parent_id == $parent_id) 
 				{
-					$html .= view('content::sections.parts.categorytemplate', compact('section', 'link'))->render();
+					$html .= view($path, compact('section', 'path'))->render();
 				}
 			}
 		}

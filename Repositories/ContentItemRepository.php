@@ -42,6 +42,45 @@ class ContentItemRepository extends AbstractRepository
 	}
 
 	/**
+	 * Get the recent content based on 
+	 * the given content type , language ,
+	 * count and status.
+	 * 
+	 * @param  string  $contentTypeName
+	 * @param  integer $count
+	 * @param  string  $language
+	 * @param  string  $status
+	 * @return collection
+	 */
+	public function getRecentContents($contentTypeName, $count = 10, $language = false, $status = 'published')
+	{	
+		/**
+		 * Return the content type that match the given name with translations.
+		 * @var contentType
+		 */
+		$contentType = \CMS::contentTypes()->first('content_type_name', $contentTypeName);
+		if ($status == 'all')
+		{
+			$contents = \CMS::contentItems()->findBy('content_type_id', $contentType->id)->
+											  orderBy('created_at', 'desc')->
+											  take($count)->
+									  	      get();
+		}
+		else
+		{
+			$contents = $this->model->with($this->getRelations())->
+		                              where('content_type_id', '=', $contentType->id)->
+		                              where('status', '=', $status)->
+									  orderBy('created_at', 'desc')->
+									  take($count)->
+									  get();
+		}
+
+		$contents = $this->getContentCommentsCount($contents);
+		return $this->getContentTranslations($contents, $language);
+	}
+
+	/**
 	 * Get all content based on the given content type ,
 	 * language and status.
 	 * 
@@ -70,6 +109,7 @@ class ContentItemRepository extends AbstractRepository
 		                              paginate($perPage);	
 		}
 
+		$contents = $this->getContentCommentsCount($contents);
 		return $this->getContentTranslations($contents, $language);
 	}
 
@@ -82,7 +122,32 @@ class ContentItemRepository extends AbstractRepository
 	 */
 	public function getContent($id, $language = false)
 	{
+		$contents = $this->getContentCommentsCount($this->find($id));
 		return $this->getContentTranslations($this->find($id), $language);
+	}
+
+	/**
+	 * Return the content comment count, if the obj of type 
+	 * LengthAwarePaginator then it is a collection of 
+	 * objects else it is a single object.
+	 * 
+	 * @param  object $obj
+	 * @return object
+	 */
+	public function getContentCommentsCount($obj)
+	{
+		if ($obj instanceof \Illuminate\Pagination\LengthAwarePaginator || $obj instanceof \Illuminate\Database\Eloquent\Collection) 
+		{
+			foreach ($obj as $element) 
+			{
+				$element->commentsCount = \CMS::comments()->getAllItemCommentsCount($element->id, 'content');
+			}
+		}
+		else
+		{
+			$obj->commentsCount = \CMS::comments()->getAllItemCommentsCount($obj->id, 'content');
+		}
+		return $obj;
 	}
 
 	/**
@@ -91,13 +156,13 @@ class ContentItemRepository extends AbstractRepository
 	 * then it is a collection of objects else it is a single
 	 * object.
 	 * 
-	 * @param  object or \Illuminate\Pagination\LengthAwarePaginator $obj
-	 * @param  string 												 $language
-	 * @return object or \Illuminate\Pagination\LengthAwarePaginator
+	 * @param  object $obj
+	 * @param  string $language
+	 * @return object 
 	 */
 	public function getContentTranslations($obj, $language)
 	{
-		if ($obj instanceof \Illuminate\Pagination\LengthAwarePaginator) 
+		if ($obj instanceof \Illuminate\Pagination\LengthAwarePaginator || $obj instanceof \Illuminate\Database\Eloquent\Collection) 
 		{
 			foreach ($obj as $element) 
 			{
@@ -143,7 +208,7 @@ class ContentItemRepository extends AbstractRepository
 				'title'       => $data['title'],
 				'description' => $data['description'], 
 				'content'     => $data['content'],
-				], 'content', $contentItem->id);
+				], 'content', $this->find($id));
 
 		return $this->find($id);
 	}
