@@ -2,6 +2,7 @@
 
 use App\Modules\Core\Http\Controllers\BaseController;
 use App\Modules\Content\Http\Requests\SectionFormRequest;
+use Illuminate\Http\Request;
 
 class SectionsController extends BaseController {
 
@@ -45,7 +46,9 @@ class SectionsController extends BaseController {
 	public function getCreate($sectioTypeId)
 	{
 		$parentSections = \CMS::sections()->all();
-		return view('content::sections.addsection', compact('parentSections'));
+		$mediaLibrary   = \CMS::galleries()->getMediaLibrary();
+
+		return view('content::sections.addsection', compact('parentSections', 'mediaLibrary'));
 	}
 
 	/**
@@ -71,7 +74,9 @@ class SectionsController extends BaseController {
 	{
 		$section        = \CMS::sections()->find($id);
 		$parentSections = \CMS::sections()->findBy('section_type_id', $section->sectionType->id);
-		return view('content::sections.updatesection', compact('section', 'parentSections'));
+		$mediaLibrary   = \CMS::galleries()->getMediaLibrary();
+
+		return view('content::sections.updatesection', compact('section', 'parentSections', 'mediaLibrary'));
 	}
 
 	/**
@@ -97,5 +102,18 @@ class SectionsController extends BaseController {
 	{
 		\CMS::sections()->delete($id);
 		return redirect()->back()->with('message', 'Section deleted succssefuly');
+	}
+
+	/**
+	 * Return a gallery array from the given ids,
+	 * handle the ajax request for inserting galleries
+	 * to the section.
+	 * 
+	 * @param  Request $request
+	 * @return collection
+	 */
+	public function getSectiongalleries(Request $request)
+	{
+		return \CMS::galleries()->getGalleries($request->input('ids'));
 	}
 }

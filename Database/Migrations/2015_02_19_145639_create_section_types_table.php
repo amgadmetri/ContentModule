@@ -19,12 +19,6 @@ class CreateSectionTypesTable extends Migration
 				$table->string('section_type_name', 255)->index();
 				$table->timestamps();
 			});
-
-			\CMS::sectionTypes()->insert(
-					[	
-						'section_type_name' => 'Categories'
-					]
-				);
 		}
 	}
 

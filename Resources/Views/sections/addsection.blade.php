@@ -22,10 +22,22 @@
         </ul>
       </div>
     @endif
+    
+    <div class="col-sm-12">
+      <div class="col-sm-6">
+       <div class="form-group">
+        <label for="section_image">Image</label>
+        <img class="img-responsive" src="http://placehold.it/200x200" width="200" height="200" id="section_image">
+        <br>
+        {!! $mediaLibrary !!}
+       </div>
+      </div>
+    </div>
 
     <form method="post">
       <input name="_token" type="hidden" value="{{ csrf_token() }}">
       <input name="section_type_id" type="hidden" value="{{ csrf_token() }}">
+      <input type="hidden" name="section_image">
 
       <div class="form-group">
         <label for="parent_id">Parent:</label>
@@ -50,11 +62,11 @@
           <option @if(old('is_active') === '0') selected @endif value="0">Not active</option>
         </select>  
       </div>
-
       <button type="submit" class="btn btn-primary form-control">Add</button>
     </form>
 
   </div>
 </div>
 
+@include('content::sections.assets.addsectiongalleries')
 @stop

@@ -22,9 +22,23 @@
       </ul>
     </div>
     @endif
+    
+    <div class="form-group">
+      <label for="section_image">Content Image</label>
+      @if($section->sectionImage)
+        <a href="{{ url('admin/gallery/show', $section->sectionImage->id) }}" target="_blank">
+          <img class="img-responsive" src="{{ $section->sectionImage->path }}" width="200" height="200" id="section_image">
+        </a>
+      @else
+        <img class="img-responsive" src="http://placehold.it/900x300" width="200" height="200" id="section_image">
+      @endif
+      <br>
+      {!! $mediaLibrary !!}
+    </div>
 
     <form method="post">
       <input name="_token" type="hidden" value="{{ csrf_token() }}">
+      <input type="hidden" name="section_image" @if($section->sectionImage) value="{{ $section->sectionImage->id }}" @endif>
       
       <div class="form-group">
         <label for="parent_id">Parent:</label>
@@ -55,4 +69,6 @@
     </form>
   </div>
 </div>
+
+@include('content::sections.assets.addsectiongalleries')
 @stop

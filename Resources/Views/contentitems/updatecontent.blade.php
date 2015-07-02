@@ -38,7 +38,7 @@
 
     <form method="post">
       <input name="_token" type="hidden" value="{{ csrf_token() }}">
-      <input type  ="hidden" name  ="content_image">
+      <input type="hidden" name="content_image" @if($contentItem->contentImage) value="{{ $contentItem->contentImage->id }}" @endif>
       
       <div class="form-group">
         <label for="alias">Alias</label>

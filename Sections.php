@@ -16,7 +16,7 @@ class Sections extends Model {
      * 
      * @var fillable
      */
-	protected $fillable = ['parent_id', 'section_type_id', 'section_name','is_active'];
+	protected $fillable = ['parent_id', 'section_type_id', 'section_image', 'section_name','is_active'];
 
 	/**
 	 * Specify what field should be castet to what.
@@ -35,6 +35,17 @@ class Sections extends Model {
 	{
 		return $this->attributes['section_name'];
 	}
+
+	 /**
+     * Return the gallery object from the
+     * stored gallery id of the section.
+     * 
+     * @return object
+     */
+    public function getSectionImageAttribute()
+    {
+        return \CMS::galleries()->find($this->attributes['section_image']);
+    }
 
 	/**
 	 * Get True or False based on the value
