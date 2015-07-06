@@ -16,7 +16,7 @@ class Sections extends Model {
      * 
      * @var fillable
      */
-	protected $fillable = ['parent_id', 'section_type_id', 'section_image', 'section_name','is_active'];
+	protected $fillable = ['parent_id', 'section_type_id', 'section_image','is_active'];
 
 	/**
 	 * Specify what field should be castet to what.
@@ -33,7 +33,7 @@ class Sections extends Model {
 	 */
 	public function getLinkNameAttribute()
 	{
-		return $this->attributes['section_name'];
+		return \CMS::sections()->getSection($this->attributes['id'])->data['title'];
 	}
 
 	 /**

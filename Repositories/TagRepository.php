@@ -46,9 +46,27 @@ class TagRepository extends AbstractRepository
 	 * @param  integer $perPage
 	 * @return collection
 	 */
-	public function getTagContents($id, $language = false, $perPage = 15)
+	public function getTagContents($contentTypeName, $id, $language = false, $status = 'published', $perPage = 15)
 	{
-		$contents = $this->find($id)->contentItems()->paginate($perPage);
+		/**
+		 * Return the content type that match the given name.
+		 * @var contentType
+		 */
+		$contentType = \CMS::contentTypes()->first('content_type_name', $contentTypeName);
+		$tag         = $this->find($id);
+		if ($status == 'all')
+		{
+			$contents = $tag ? $tag->contentItems()->
+		                             where('content_type_id', '=', $contentType->id)->
+		                             paginate($perPage) : [];
+		}
+		else
+		{
+			$contents = $tag ? $tag->contentItems()->
+		                             where('content_type_id', '=', $contentType->id)->
+		                             where('status', '=', $status)->
+		                             paginate($perPage) : [];
+		}
 		return \CMS::contentItems()->getContentTranslations($contents, $language);
 	}
 

@@ -53,8 +53,27 @@
       </div>
 
       <div class="form-group">
-        <label for="section_name">Name:</label>
-        <input type="text" class="form-control" name="section_name" value="{{ $section->section_name }}" placeholder="Add name here .." aria-describedby="sizing-addon2">
+        <label for="title">Title</label>
+        <input 
+        type="text" 
+        class="form-control" 
+        name="title" 
+        value="{{ $section->data['title'] }}" 
+        placeholder="Add title here .." 
+        aria-describedby="sizing-addon2"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input 
+        type="text" 
+        class="form-control" 
+        name="description" 
+        value="{{ $section->data['description'] }}" 
+        placeholder="Add here Description .." 
+        aria-describedby="sizing-addon2"
+        >
       </div>
 
       <div class="form-group">

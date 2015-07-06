@@ -32,7 +32,7 @@ class SectionsController extends BaseController {
 	public function getShow($sectioTypeId)
 	{
 		$sectionType = \CMS::sectionTypes()->find($sectioTypeId);
-		$sections    = \CMS::sections()->findBy('section_type_id', $sectioTypeId);
+		$sections    = \CMS::sections()->getAllSections($sectionType->section_type_name);
 		
 		return view('content::sections.viewsections', compact('sections', 'sectionType'));
 	}
@@ -45,7 +45,8 @@ class SectionsController extends BaseController {
 	 */
 	public function getCreate($sectioTypeId)
 	{
-		$parentSections = \CMS::sections()->all();
+		$sectionType    = \CMS::sectionTypes()->find($sectioTypeId);
+		$parentSections = \CMS::sections()->getAllSections($sectionType->section_type_name);
 		$mediaLibrary   = \CMS::galleries()->getMediaLibrary();
 
 		return view('content::sections.addsection', compact('parentSections', 'mediaLibrary'));
@@ -60,7 +61,7 @@ class SectionsController extends BaseController {
 	 */
 	public function postCreate(SectionFormRequest $request, $sectionTypeId)
 	{
-		\CMS::sections()->create(array_merge($request->all(), ['section_type_id' => $sectionTypeId]));
+		\CMS::sections()->createSection(array_merge($request->all(), ['section_type_id' => $sectionTypeId]));
 		return redirect()->back()->with('message', 'Section created succssefuly');
 	}
 
@@ -72,8 +73,8 @@ class SectionsController extends BaseController {
 	 */
 	public function getEdit($id)
 	{
-		$section        = \CMS::sections()->find($id);
-		$parentSections = \CMS::sections()->findBy('section_type_id', $section->sectionType->id);
+		$section        = \CMS::sections()->getSection($id);
+		$parentSections = \CMS::sections()->getAllSections($section->sectionType->section_type_name);
 		$mediaLibrary   = \CMS::galleries()->getMediaLibrary();
 
 		return view('content::sections.updatesection', compact('section', 'parentSections', 'mediaLibrary'));
@@ -88,7 +89,7 @@ class SectionsController extends BaseController {
 	 */
 	public function postEdit(SectionFormRequest $request, $id)
 	{
-		\CMS::sections()->update($id, $request->all());
+		\CMS::sections()->updateSection($id, $request->all());
 		return redirect()->back()->with('message', 'Section updated succssefuly');
 	}
 
@@ -102,18 +103,5 @@ class SectionsController extends BaseController {
 	{
 		\CMS::sections()->delete($id);
 		return redirect()->back()->with('message', 'Section deleted succssefuly');
-	}
-
-	/**
-	 * Return a gallery array from the given ids,
-	 * handle the ajax request for inserting galleries
-	 * to the section.
-	 * 
-	 * @param  Request $request
-	 * @return collection
-	 */
-	public function getSectiongalleries(Request $request)
-	{
-		return \CMS::galleries()->getGalleries($request->input('ids'));
 	}
 }

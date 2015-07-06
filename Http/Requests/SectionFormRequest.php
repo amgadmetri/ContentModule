@@ -25,7 +25,6 @@ class SectionFormRequest extends Request {
 	{
 		return [
 		'parent_id'    => 'required',
-		'section_name' => 'required|max:255',
 		'is_active'    => 'required'
 		];
 	}

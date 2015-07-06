@@ -83,6 +83,9 @@
 							Albums
 							</a>
 						@endif
+						@if(\CMS::permissions()->can('show', 'Seos'))
+							<a class="btn btn-default" href='{{ url("admin/seo/show/contentItem/$contentItem->id") }}' role="button">SEO</a>
+						@endif
 					</th>
 				</tr>
 			@endforeach

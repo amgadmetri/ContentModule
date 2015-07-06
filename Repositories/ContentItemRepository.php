@@ -33,12 +33,13 @@ class ContentItemRepository extends AbstractRepository
 	 */
 	public function search($query, $language = false)
 	{	
-		$contents = $this->model->whereIn('id', \CMS::languageContents()->search($query, 'content'))->
+		$contents = $this->model->with($this->getRelations())->
+								  whereIn('id', \CMS::languageContents()->search($query, 'content'))->
 		                          orWhereIn('user_id', \CMS::users()->search($query))->
 		                          orWhereIn('id', \CMS::sections()->search($query)->lists('content_item_id'))->
 		                          orWhereIn('id', \CMS::tags()->search($query)->lists('content_item_id'))->paginate(1);
 
-		return \CMS::contentItems()->getContentTranslations($contents, $language);
+		return $this->getContentTranslations($contents, $language);
 	}
 
 	/**
@@ -55,13 +56,13 @@ class ContentItemRepository extends AbstractRepository
 	public function getRecentContents($contentTypeName, $count = 10, $language = false, $status = 'published')
 	{	
 		/**
-		 * Return the content type that match the given name with translations.
+		 * Return the content type that match the given name.
 		 * @var contentType
 		 */
 		$contentType = \CMS::contentTypes()->first('content_type_name', $contentTypeName);
 		if ($status == 'all')
 		{
-			$contents = \CMS::contentItems()->findBy('content_type_id', $contentType->id)->
+			$contents = $this->findBy('content_type_id', $contentType->id)->
 											  orderBy('created_at', 'desc')->
 											  take($count)->
 									  	      get();
@@ -93,13 +94,13 @@ class ContentItemRepository extends AbstractRepository
 	public function getAllContents($contentTypeName, $language = false, $status = 'published', $perPage = 15)
 	{	
 		/**
-		 * Return the content type that match the given name with translations.
+		 * Return the content type that match the given name.
 		 * @var contentType
 		 */
 		$contentType = \CMS::contentTypes()->first('content_type_name', $contentTypeName);
 		if ($status == 'all')
 		{
-			$contents = \CMS::contentItems()->paginateBy('content_type_id', $contentType->id, $perPage);
+			$contents = $this->paginateBy('content_type_id', $contentType->id, $perPage);
 		}
 		else
 		{
@@ -122,8 +123,88 @@ class ContentItemRepository extends AbstractRepository
 	 */
 	public function getContent($id, $language = false)
 	{
-		$contents = $this->getContentCommentsCount($this->find($id));
-		return $this->getContentTranslations($this->find($id), $language);
+		$content = $this->find($id);
+		$content = $this->getContentCommentsCount($content);
+		return $this->getContentTranslations($content, $language);
+	}
+
+	/**
+	 * Return the month and year archive based
+	 * on the contents.
+	 * 
+	 * @param  string  $contentTypeName
+	 * @return object
+	 */
+	public function getContentArchive($contentTypeName, $status = 'published')
+	{
+		/**
+		 * Return the content type that match the given name.
+		 * @var contentType
+		 */
+		$contentType = \CMS::contentTypes()->first('content_type_name', $contentTypeName);
+
+		if ($status == 'all')
+		{
+			$months = $this->findBy('content_type_id', $contentType->id)->lists('created_at.month');
+			$years  = $this->findBy('content_type_id', $contentType->id)->lists('created_at.year');
+		}
+		else
+		{
+			$months = $this->model->with($this->getRelations())->
+		                            where('content_type_id', '=', $contentType->id)->
+		                            where('status', '=', $status)->
+		                            get()->
+		                            lists('created_at.month');
+			$years = $this->model->with($this->getRelations())->
+		                           where('content_type_id', '=', $contentType->id)->
+		                           where('status', '=', $status)->
+		                           get()->
+		                           lists('created_at.year');
+		}
+		$archive['months'] = array_unique($months);
+		$archive['years']  = array_unique($years);
+		return $archive;
+	}
+
+	/**
+	 * Get the contents based on 
+	 * the given content type , language ,
+	 * count and status.
+	 * 
+	 * @param  string  $type     The type of the archive
+	 *                           ex: months, years.
+	 * @param  string  $value 	 The value of the archive.
+	 * @param  string  $language
+	 * @param  string  $status
+	 * @param  integer $perPage
+	 * @return object
+	 */
+	public function getArchiveContents($contentTypeName, $type, $value, $language = false, $status = 'published', $perPage = 15)
+	{
+		/**
+		 * Return the content type that match the given name.
+		 * @var contentType
+		 */
+		$contentType = \CMS::contentTypes()->first('content_type_name', $contentTypeName);
+		$type        = strtoupper(str_singular($type));
+
+		if ($status == 'all')
+		{
+			$contents = $this->model->with($this->getRelations())->
+									  where('content_type_id', '=', $contentType->id)->
+			                          whereRaw($type . '(created_at)=?', [$value])->
+			                          paginate($perPage);
+		}
+		else
+		{
+			$contents = $this->model->with($this->getRelations())->
+		                              where('content_type_id', '=', $contentType->id)->
+		                           	  where('status', '=', $status)->
+		                              whereRaw($type . '(created_at)=?', [$value])->
+		                              paginate($perPage);
+		}
+
+		return $this->getContentTranslations($contents, $language);
 	}
 
 	/**

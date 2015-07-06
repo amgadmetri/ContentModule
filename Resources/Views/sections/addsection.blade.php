@@ -44,15 +44,33 @@
         <select name="parent_id" class="form-control">
           <option value="0">New</option>
             @foreach($parentSections as $parentSection)
-                <option value="{{ $parentSection->id }}">{{ $parentSection->section_name }}</option>
+                <option value="{{ $parentSection->id }}">{{ $parentSection->data['title'] }}</option>
             @endforeach
         </select>  
       </div>
 
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input 
+        type             ="text" 
+        class            ="form-control" 
+        name             ="title" 
+        value            ="{{ old('title') }}" 
+        placeholder      ="Add title here .." 
+        aria-describedby ="sizing-addon2"
+        >
+      </div>
 
       <div class="form-group">
-        <label for="section_name">Name:</label>
-        <input type="text" class="form-control" name="section_name" value="{{ old('section_name') }}" placeholder="Add name here .." aria-describedby="sizing-addon2">
+        <label for="description">Description</label>
+        <input 
+        type             ="text" 
+        class            ="form-control" 
+        name             ="description" 
+        value            ="{{ old('description') }}" 
+        placeholder      ="Description .." 
+        aria-describedby ="sizing-addon2"
+        >
       </div>
 
       <div class="form-group">

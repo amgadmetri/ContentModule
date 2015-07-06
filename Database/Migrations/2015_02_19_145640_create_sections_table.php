@@ -17,7 +17,6 @@ class CreateSectionsTable extends Migration
 			Schema::create('sections', function(Blueprint $table) {
 				$table->bigIncrements('id');
 				$table->bigInteger('parent_id');
-				$table->string('section_name', 255)->index();
 				$table->bigInteger('section_image');
 				$table->boolean('is_active')->default(0);
 				$table->bigInteger('section_type_id')->unsigned();

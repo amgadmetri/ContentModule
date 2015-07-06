@@ -4,7 +4,7 @@
 	</a>
 	@if ($section->children->count() > 0)
 		<ul class='nav nav-pills'>
-			{!! \CMS::sections()->getSectionTree($section->id, $path) !!}
+			{!! \CMS::sections()->getSectionTree($sectionTypeName, $path, $language, $perPage, $section->id) !!}
 		</ul>
 	@endif
 </li>

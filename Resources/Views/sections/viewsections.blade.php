@@ -18,6 +18,7 @@
 				<tr>
 					<th>id</th>
 					<th>title</th>
+					<th>description</th>
 					<th>is active</th>
 					<th>Options</th>
 				</tr>
@@ -26,7 +27,8 @@
 				@foreach($sections as $section)
 					<tr>
 						<th>{{ $section->id }}</th>
-						<th>{{ $section->section_name }}</th>
+						<th>{{ $section->data['title'] }}</th>
+						<th>{{ $section->data['description'] }}</th>
 						<th>{{ $section->is_active }}</th>
 						<th>
 							@if(\CMS::permissions()->can('edit', 'Sections'))
@@ -43,6 +45,14 @@
 								href  ='{{ url("admin/content/sections/delete/$section->id") }}' 
 								role  ="button">
 								Delete
+								</a> 
+							@endif
+							@if(\CMS::permissions()->can('show', 'LanguageContents'))
+								<a 
+								class ="btn btn-default" 
+								href  ='{{ url("admin/language/languagecontents/show/section/$section->id") }}'
+								role  ="button">
+								Translations
 								</a> 
 							@endif
 						</th>
